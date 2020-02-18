@@ -1,0 +1,22 @@
+<svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+ <defs>
+  <filter height="200%" width="200%" y="-50%" x="-50%" id="svg_2_blur">
+   <feGaussianBlur stdDeviation="0" in="SourceGraphic"/>
+  </filter>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="1002" width="1002" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path stroke="#999999" transform="rotate(90 498.7442626953125,482.72213745117193) " id="svg_5" d="m45.173486,482.722141l194.38749,-395.713728l518.3666,0l194.387429,395.713728l-194.387429,395.713728l-518.3666,0l-194.38749,-395.713728z" stroke-width="10.5" fill="#0083ff"/>
+  <path stroke="#999999" opacity="0.42" id="svg_8" d="m108.609087,738.798386c0,0 51.540013,-244.590534 326.420085,-413.820746c274.880062,-169.230212 453.287793,-99.158335 452.626564,-99.81986c0.661229,0.661526 0.661229,512.318497 0,511.656982c0.661229,0.661516 -387.871163,192.36761 -388.532412,191.706104c0.661249,0.661506 -390.514237,-189.72248 -390.514237,-189.72248z" stroke-opacity="null" stroke-width="0" fill="#0061ff"/>
+  <text stroke="#999999" transform="rotate(-10 497.36010742187443,333.78884887695267) matrix(1.20249342918396,0,0,1.2096271514892576,-21.41245380215755,-34.580828820136794) " font-style="italic" font-weight="bold" filter="url(#svg_2_blur)" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="188" id="svg_2" y="368.835844" x="148.825625" stroke-width="5" fill="#ffffff">scrum</text>
+  <text font-style="italic" font-weight="bold" stroke="#999999" transform="rotate(-10 490.4712829589833,561.6760864257808) matrix(1.689728871130121,0,0,1.474533134546718,-205.57991568414963,-146.03167094599337) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="250" id="svg_3" y="568.750563" x="200.225221" stroke-width="5" fill="#ffffff">375</text>
+ </g>
+</svg>
