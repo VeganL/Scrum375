@@ -6,4 +6,4 @@ var app = express();
 
 // Serves content on port 8080 from the directory named "public"
 app.use(express.static("public"));
-app.listen(80);
+app.listen(8080);
