@@ -21,11 +21,13 @@ a {
     background-color: #0061ff;
     color: white;
     text-decoration: none;
-    font-size: 24px;
+    font-size: 36px;
     padding: 5px 10px 5px 10px;
-    margin-top: 20px;
+    position: relative;
+    margin: 0 5px 0 5px;
+    top: 20px;
     border: 0px solid white;
-    border-radius: 20px;
+    border-radius: 30px;
 }
 
 /*Tablets in portrait*/
@@ -52,6 +54,8 @@ a {
     img {
         height: 400px;
         width: 400px;
+        position: absolute;
+        top: 40%;
     }
 
     .bottom {
