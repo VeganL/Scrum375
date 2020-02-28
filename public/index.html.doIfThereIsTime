@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <title>Scrum375 | Welcome</title>
+        <link rel="stylesheet" type="text/css" href="css/welcome.css">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <meta name="viewport" content="width=device-width"/>
+    </head>
+    <body>
+        <div class="top">
+            <img src="img/scrum375.svg" alt="Scrum375 Logo">
+        </div>
+        <div class="bottom">
+            <a href="Register/">Register</a>
+            <a href="Login/">Login</a>
+        </div>
+    </body>
+</html>

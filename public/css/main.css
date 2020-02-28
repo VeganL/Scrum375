@@ -2,6 +2,7 @@
 body {
     font-family: Helvetica, Verdana, Arial, sans-serif;
     margin: 0;
+    color: #545454;
 }
 
 .sidebar h1 {
@@ -33,6 +34,31 @@ body {
     background-color: #0054db;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    font-size: 18px;
+}
+
+input {
+    width: 250px;
+    height: 24px;
+    border: 2px solid darkgray;
+    border-radius: 4px;
+}
+
+#submit {
+    background-color: #00a651;
+    color: white;
+    font-size: 18px;
+    height: 34px;
+    width: 100px;
+    margin-top: 20px;
+    border-radius: 6px;
+    border: 0px solid lightgrey;
+    cursor: pointer;
+}
+
 /*Tablets in portrait*/
 @media screen and (min-width: 700px) and (max-width: 1024px) and (orientation: portrait) {
 
@@ -50,6 +76,11 @@ body {
 
 /*Desktop*/
 @media screen and (min-width: 1100px) {
+    body {
+        display: flex;
+        flex-direction: row;
+    }
+
     .vertical-center {
         margin: 0;
         position: absolute;
@@ -76,5 +107,20 @@ body {
         color: white;
         padding: 3px;
         text-decoration: none;
+    }
+
+    .content {
+        margin-left: 300px;
+        width: 300px;
+        padding-left: 50px;
+        position: absolute;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+
+    #formErrors {
+        font-size: 14px;
+        color: red;
     }
 }
