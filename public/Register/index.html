@@ -8,7 +8,7 @@
     </head>
     <body>
         <div class="sidebar">
-            <div class="vertical-center">
+            <div class="vertical-center" style="text-align: center;">
                 <h1 id="header-firstline">scrum</h1>
                 <h1 id="header-secondline">375</h1>
                 <a href="../Register/">Register</a>
@@ -17,19 +17,23 @@
             </div>
         </div>
         <div class="content">
-            <h1>Register</h1>
-            <form>
-                <label for="username">Username</label>
-                <input type="text" id="username">
-                <label for="email">E-mail</label>
-                <input type="email" id="email">
-                <label for="password">Password</label>
-                <input type="password" id="password">
-                <label for="passwordConfirm">Confirm Password</label>
-                <input type="password" id="passwordConfirm">
-                <div id="formErrors"></div>
-                <input type="submit" id="submit" value="Register">
-            </form>
+            <div class="vertical-center">
+                <h1>Register</h1>
+                <form>
+                    <label for="username">Username</label>
+                    <input type="text" id="username">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email">
+                    <label for="password">Password</label>
+                    <input type="password" id="password">
+                    <label for="passwordConfirm">Confirm Password</label>
+                    <input type="password" id="passwordConfirm">
+                    <input type="submit" id="submit" value="Register">
+                </form>
+            </div>
+        </div>
+        <div id="errorContainer">
+            <div id="formErrors" class="vertical-center"></div>
         </div>
     </body>
 </html>

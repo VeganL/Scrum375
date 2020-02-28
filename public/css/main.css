@@ -76,16 +76,20 @@ input {
 
 /*Desktop*/
 @media screen and (min-width: 1100px) {
-    body {
+    html, body {
+        height: 100%;
+        margin: 0;
         display: flex;
-        flex-direction: row;
+        position: relative;
+    }
+    
+    .sidebar .vertical-center {
+        width: 100%;
     }
 
     .vertical-center {
         margin: 0;
         position: absolute;
-        text-align: center;
-        width: 100%;
         top: 50%;
         left: 50%;
         -ms-transform: translate(-50%, -50%);
@@ -96,9 +100,9 @@ input {
         margin: 0;
         padding: 0;
         width: 300px;
-        position: fixed;
         height: 100%;
         overflow: auto;
+        position: relative;
     }
     
     .sidebar a {
@@ -110,17 +114,19 @@ input {
     }
 
     .content {
-        margin-left: 300px;
         width: 300px;
         padding-left: 50px;
-        position: absolute;
-        top: 50%;
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);
+        height: 100%;
+    }
+
+    #errorContainer {
+        position: relative;
+        width: 300px;
     }
 
     #formErrors {
         font-size: 14px;
+        width: 100%;
         color: red;
     }
 }
