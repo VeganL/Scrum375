@@ -10,26 +10,6 @@ var pool = mariadb.createPool({
     password: dbKey.password,
 });
 
-async function login (username, password) {
-    let conn;
-    let rows = {};
-    try {
-        conn = await pool.getConnection();
-        rows = await conn.query("SELECT user_id, board_ids FROM accounts WHERE username='" + username + "' AND password='" + password + "';");
-    } catch (err) {
-        throw err;
-    } finally {
-        if (conn) {
-            conn.end();
-            if (rows != {}) {
-                return rows[0];
-            } else {
-                return rows;
-            }
-        }
-    }
-}
-
 // Instantiating an express instance
 var app = express();
 
@@ -42,5 +22,12 @@ app.post("/signin", function (req, res) {
     let username = req.body.username;
     let password = req.body.password;
 
-    res.send(login(username,password));
+    pool
+	.query("SELECT user_id,board_ids FROM accounts WHERE username='" + username+ "' AND password='" + password + "'")
+	.then(rows => {
+	    res.send(rows[0]);
+	})
+	.catch(err => {
+	    throw err;
+	});
 });
