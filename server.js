@@ -38,17 +38,3 @@ app.post("/signin", function (req, res) {
         }
     }
 });
-
-async function signin () {
-    let conn;
-    try {
-        conn = await pool.getConnection();
-        const response = await conn.query("SELECT user_id, board_ids FROM accounts WHERE username='" + username + "' AND password='" + password + "';");
-        console.log(response); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
-  
-    } catch (err) {
-        throw err;
-    } finally {
-        if (conn) return conn.end();
-    }
-}
