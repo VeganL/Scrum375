@@ -5,12 +5,30 @@ var bodyParser = require("body-parser");
 var mariadb = require("mariadb");
 var dbKey = require("../mariadb_info.json");
 var pool = mariadb.createPool({
-    host: dbKey.host,
     database: dbKey.database,
     user: dbKey.user,
     password: dbKey.password,
-    connectionLimit: dbKey.connectionLimit
 });
+
+async function login (username, password) {
+    let conn;
+    let rows = {};
+    try {
+        conn = await pool.getConnection();
+        rows = await conn.query("SELECT user_id, board_ids FROM accounts WHERE username='" + username + "' AND password='" + password + "';");
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) {
+            conn.end();
+            if (rows != {}) {
+                return rows[0];
+            } else {
+                return rows;
+            }
+        }
+    }
+}
 
 // Instantiating an express instance
 var app = express();
@@ -24,17 +42,5 @@ app.post("/signin", function (req, res) {
     let username = req.body.username;
     let password = req.body.password;
 
-    async function signin () {
-        let conn;
-        try {
-            conn = await pool.getConnection();
-            const response = await conn.query("SELECT user_id, board_ids FROM accounts WHERE username='" + username + "' AND password='" + password + "';");
-            res.send(response); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
-      
-        } catch (err) {
-            throw err;
-        } finally {
-            if (conn) return conn.end();
-        }
-    }
+    res.send(login(username,password));
 });
