@@ -6,6 +6,7 @@ var mariadb = require("mariadb");
 var dbKey = require("../mariadb_info.json");
 var pool = mariadb.createPool({
     host: dbKey.host,
+    database: dbKey.database,
     user: dbKey.user,
     password: dbKey.password,
     connectionLimit: dbKey.connectionLimit
