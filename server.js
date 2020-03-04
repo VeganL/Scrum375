@@ -3,8 +3,13 @@ var express = require("express");
 var bodyParser = require("body-parser");
 
 var mariadb = require("mariadb");
-var dbKey = require("../mariadb_info.json")
-var pool = mariadb.createPool(dbKey);
+var dbKey = require("../mariadb_info.json");
+var pool = mariadb.createPool({
+    host: dbKey.host,
+    user: dbKey.user,
+    password: dbKey.password,
+    connectionLimit: dbKey.connectionLimit
+});
 
 // Instantiating an express instance
 var app = express();
