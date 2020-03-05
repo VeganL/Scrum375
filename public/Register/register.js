@@ -86,6 +86,7 @@ function checkForm() {
  function registerResponseReceivedHandler()
  {
 	 let response = this.responseText;
+	 console.log(response);
  }
  
  document.getElementById("submit").addEventListener("click", function(event) {
