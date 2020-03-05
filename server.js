@@ -25,9 +25,13 @@ app.post("/signin", function (req, res) {
     pool
 	.query("SELECT user_id,board_ids FROM accounts WHERE username='" + username+ "' AND password='" + password + "'")
 	.then(rows => {
-	    res.send(rows[0]);
+        if (typeof rows[0] !== 'undefined') {
+            res.send(rows[0]);
+        } else {
+            res.send('"invalid"');
+        }
 	})
 	.catch(err => {
 	    throw err;
-	});
+    });
 });
