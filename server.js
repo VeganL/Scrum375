@@ -74,7 +74,7 @@ app.post("/getboards", function (req, res) {
                 pool
                 .query("SELECT board_data FROM boards WHERE board_id=" + boardIds[i])
                 .then(resp => {
-                    boardData.push(JSON.parse(resp[0].board_data));
+                    boardData.push(JSON.parse(JSON.stringify(JSON.parse(resp[0].board_data))));
                 })
                 .catch(err => {
                     throw err;
@@ -84,7 +84,7 @@ app.post("/getboards", function (req, res) {
             let jsonStr = '[';
             for (var i = 0; i<boardIds.length; i++) {
                 jsonStr += '{"board_id": ' + boardIds[i] + ', "board_data": ' + boardData[i] + '}';
-                if (i !== (boardIds.length - 2)) {
+                if (boardIds.length !== 1 && i !== (boardIds.length - 2)) {
                     jsonStr += ',';
                 }
             }
