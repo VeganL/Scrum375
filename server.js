@@ -42,17 +42,17 @@ app.post("/registernew", function (req, res) {
     let email = req.body.email;
 
     pool
-    .query("SELECT user_id FROM accounts WHERE username='" + username + "'")
+    .query("SELECT user_id FROM accounts WHERE username='" + username + "' OR email='" + email + "'")
     .then(rows => {
         if (typeof rows[0] === 'undefined') {
             pool
             .query("INSERT INTO accounts (username, password, email) VALUES ('" + username + "', '" + password + "', '" + email + "')")
-            .then(res.send('"Registration successful"'))
+            .then(res.send('"Registration success"'))
             .catch(err => {
                 throw err;
             });
         } else {
-            res.send('"Username already taken"')
+            res.send('"Username or email already used."')
         }
     })
     .catch(err => {
@@ -60,21 +60,21 @@ app.post("/registernew", function (req, res) {
     });
 });
 
-app.post("/boards", function (req, res) {
+app.post("/getboards", function (req, res) {
     let userId = req.body.user_id;
 
     pool
     .query("SELECT board_ids FROM accounts WHERE user_id=" + userId)
     .then(rows => {
         if (rows[0].board_ids !== null) {
-            let boardIds = rows[0].board_ids;
+            let boardIds = JSON.parse(rows[0].board_ids);
             let boardData = [];
 
             for (var i = 0; i<boardIds.length; i++) {
                 pool
                 .query("SELECT board_data FROM boards WHERE board_id=" + boardIds[i])
                 .then(resp => {
-                    boardData.push(resp[0].board_data);
+                    boardData.push(JSON.parse(resp[0].board_data));
                 })
                 .catch(err => {
                     throw err;
@@ -84,7 +84,7 @@ app.post("/boards", function (req, res) {
             let jsonStr = '[';
             for (var i = 0; i<boardIds.length; i++) {
                 jsonStr += '{"board_id": ' + boardIds[i] + ', "board_data": ' + boardData[i] + '}';
-                if (!(i === (boardIds.length - 2))) {
+                if (i !== (boardIds.length - 2)) {
                     jsonStr += ',';
                 }
             }
@@ -98,4 +98,8 @@ app.post("/boards", function (req, res) {
     .catch(err => {
         throw err;
     });
+});
+
+app.post("/insertboard", function (req, res) {
+
 });
