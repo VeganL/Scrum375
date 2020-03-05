@@ -83,8 +83,25 @@ function checkForm() {
     }
  }
  
+ function registerResponseReceivedHandler()
+ {
+	 let response = this.responseText;
+ }
+ 
  document.getElementById("submit").addEventListener("click", function(event) {
     checkForm();
+	
+	let username = document.getElementById("username").value;
+	let email = document.getElementById("email").value;
+	let password = document.getElementById("password").value;
+	
+	
+	let xmlHttp = new XMLHttpRequest();
+	let requestURL = "http://scrum375.lroy.us/registernew"
+	xmlHttp.addEventListener("load", registerResponseReceivedHandler);
+	xmlHttp.open("POST", requestURL);
+	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+	xmlhttp.send(JSON.stringify({ "username": username, "email": email, "password": password }));
  
     // Prevent default form action. DO NOT REMOVE THIS LINE
     event.preventDefault();
