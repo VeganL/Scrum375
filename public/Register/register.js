@@ -81,15 +81,15 @@ function checkForm() {
        document.getElementById("formErrors").innerHTML = errorMsg;
        document.getElementById("formErrors").style.display = "block";
     }
- }
+}
+
+function registerResponseReceivedHandler()
+{
+	let response = this.responseText;
+	console.log(response);
+}
  
- function registerResponseReceivedHandler()
- {
-	 let response = this.responseText;
-	 console.log(response);
- }
- 
- document.getElementById("submit").addEventListener("click", function(event) {
+document.getElementById("submit").addEventListener("click", function(event) {
     checkForm();
 	
 	let username = document.getElementById("username").value;
@@ -101,9 +101,9 @@ function checkForm() {
 	let requestURL = "http://scrum375.lroy.us/registernew"
 	xmlHttp.addEventListener("load", registerResponseReceivedHandler);
 	xmlHttp.open("POST", requestURL);
-	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-	xmlhttp.send(JSON.stringify({ "username": username, "email": email, "password": password }));
+	xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+	xmlHttp.send(JSON.stringify({ "username": username, "email": email, "password": password }));
  
     // Prevent default form action. DO NOT REMOVE THIS LINE
     event.preventDefault();
- });
+});
