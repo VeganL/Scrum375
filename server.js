@@ -23,7 +23,7 @@ app.post("/signin", function (req, res) {
     let password = req.body.password;
 
     pool
-	.query("SELECT user_id FROM accounts WHERE username='" + username+ "' AND password='" + password + "'")
+	.query("SELECT user_id,board_ids FROM accounts WHERE username='" + username+ "' AND password='" + password + "'")
 	.then(rows => {
         if (typeof rows[0] !== 'undefined') {
             res.send(rows[0]);
@@ -61,49 +61,13 @@ app.post("/registernew", function (req, res) {
 });
 
 app.post("/getboards", function (req, res) {
-    let userId = req.body.user_id;
+    let boardIds = req.body.board_ids;
+    let boardIdSet = boardIds.subString(1, boardIds.length - 2);
 
     pool
-    .query("SELECT board_ids FROM accounts WHERE user_id=" + userId)
+    .query("SELECT board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
     .then(rows => {
-        if (rows[0].board_ids !== null) {
-            let boardIds = JSON.parse(rows[0].board_ids);
-            let boardData = [];
-
-            jsonStr = '[';
-            for (var i = 0; i<boardIds.length; i++) {
-                jsonStr += '{"board_id": ' + boardIds[i] + ', "board_data": ' 
-                boardData = pool.query("SELECT board_data FROM boards WHERE board_id=" + boardIds[i]).then(resp => {return resp[0].board_data}).catch(err => {throw err;}) + '}';
-                setTimeout(jsonStr += boardData + '}', 30);
-                if (boardIds.length !== 1 && i !== (boardIds.length - 2)) {
-                    jsonStr += ',';
-                }
-            }
-
-            /*for (var i = 0; i<boardIds.length; i++) {
-                pool
-                .query("SELECT board_data FROM boards WHERE board_id=" + boardIds[i])
-                .then(resp => {
-                    boardData.push(JSON.parse(JSON.stringify(JSON.parse(resp[0].board_data))));
-                })
-                .catch(err => {
-                    throw err;
-                });
-            }
-
-            let jsonStr = '[';
-            for (var i = 0; i<boardIds.length; i++) {
-                jsonStr += '{"board_id": ' + boardIds[i] + ', "board_data": ' + boardData[i] + '}';
-                if (boardIds.length !== 1 && i !== (boardIds.length - 2)) {
-                    jsonStr += ',';
-                }
-            }*/
-            jsonStr += ']';
-
-            res.send(jsonStr);
-        } else {
-            res.send('[]');
-        }
+        res.send(rows[0]);
     })
     .catch(err => {
         throw err;
