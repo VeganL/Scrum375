@@ -35,7 +35,8 @@ function signinResponseReceivedHandler()
 {
 	if(this.responseText != "Username or password is incorrect.")
 	{
-		let userId = this.responseText;
+		let response = this.responseText;
+		console.log(response);
 		//load boards html page, make getBoards request with userId
 	}
 }
@@ -50,8 +51,8 @@ document.getElementById("submit").addEventListener("click", function(event) {
 	let requestURL = "http://scrum375.lroy.us/signin";
 	xmlHttp.addEventListener("load", signinResponseReceivedHandler);
 	xmlHttp.open("POST", requestURL);
-	xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-	xmlHttp.send(JSON.stringify({ "username": username, "password": password }));
+	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xmlHttp.send("username=" + username +"&password="+ password);
 	
 	// Prevent default form action. DO NOT REMOVE THIS LINE
 	event.preventDefault();

@@ -101,8 +101,8 @@ document.getElementById("submit").addEventListener("click", function(event) {
 	let requestURL = "http://scrum375.lroy.us/registernew"
 	xmlHttp.addEventListener("load", registerResponseReceivedHandler);
 	xmlHttp.open("POST", requestURL);
-	xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-	xmlHttp.send(JSON.stringify({ "username": username, "email": email, "password": password }));
+	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xmlHttp.send("username=" + username + "&email=" + email + "&password=" + password );
  
     // Prevent default form action. DO NOT REMOVE THIS LINE
     event.preventDefault();
