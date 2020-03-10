@@ -35,8 +35,8 @@ function signinResponseReceivedHandler()
 {
 	if(this.responseText != "Username or password is incorrect.")
 	{
-		let userId = this.responseText;
-		console.log(userId);
+		let response = this.responseText;
+		console.log(response);
 		//load boards html page, make getBoards request with userId
 	}
 }
