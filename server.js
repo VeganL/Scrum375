@@ -62,7 +62,7 @@ app.post("/registernew", function (req, res) {
 
 app.post("/getboards", function (req, res) {
     let boardIds = req.body.board_ids;
-    let boardIdSet = boardIds.subString(1, boardIds.length - 2);
+    let boardIdSet = boardIds.substring(1, boardIds.length - 1);
 
     pool
     .query("SELECT board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
