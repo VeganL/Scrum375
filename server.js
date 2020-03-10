@@ -65,9 +65,9 @@ app.post("/getboards", function (req, res) {
     let boardIdSet = boardIds.substring(1, boardIds.length - 1);
 
     pool
-    .query("SELECT board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
+    .query("SELECT board_id,owner_id,board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
     .then(rows => {
-        res.send(rows[0]);
+        res.send(rows);
     })
     .catch(err => {
         throw err;
