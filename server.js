@@ -72,9 +72,12 @@ app.post("/getboards", function (req, res) {
 
             jsonStr = '[';
             for (var i = 0; i<boardIds.length; i++) {
-                jsonStr += '{"board_id": ' + boardIds[i] + ', "board_data": ' + pool
-                            .query("SELECT board_data FROM boards WHERE board_id=" + boardIds[i])
-                            .then(resp => {return resp[0].board_data}).catch(err => {throw err;}) + '}';
+                jsonStr += '{"board_id": ' + boardIds[i] + ', "board_data": ' 
+                boardData = pool.query("SELECT board_data FROM boards WHERE board_id=" + boardIds[i]).then(resp => {return resp[0].board_data}).catch(err => {throw err;}) + '}';
+                setTimeout(jsonStr += boardData + '}', 30);
+                if (boardIds.length !== 1 && i !== (boardIds.length - 2)) {
+                    jsonStr += ',';
+                }
             }
 
             /*for (var i = 0; i<boardIds.length; i++) {
