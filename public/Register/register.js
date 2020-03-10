@@ -102,7 +102,7 @@ document.getElementById("submit").addEventListener("click", function(event) {
 	xmlHttp.addEventListener("load", registerResponseReceivedHandler);
 	xmlHttp.open("POST", requestURL);
 	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xmlHttp.send("username=" + username + "&email=" + email, "&password=" + password );
+	xmlHttp.send("username=" + username + "&email=" + email + "&password=" + password );
  
     // Prevent default form action. DO NOT REMOVE THIS LINE
     event.preventDefault();
