@@ -84,6 +84,25 @@ app.post("/insertboard", function (req, res) {
 
     pool
     .query("INSERT INTO boards (owner_id, board_data) VALUES (" + ownerId + ", '" + boardData + "')")
-    .then(res.send(boardData))
+    .then()
+    .catch(err => {throw err});
+    
+    pool
+    .query("SELECT board_id FROM boards WHERE board_data='" + boardData + "'")
+    .then(rows => {
+        pool
+        .query("SELECT board_ids FROM accounts WHERE user_id=" + ownerId)
+        .then(vals => {
+            let idArr = JSON.parse(vals[0]);
+            idArr.push(parseInt(rows[0]));
+            let boardIds = JSON.stringify(idArr);
+
+            pool
+            .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE user_id=" + ownerId)
+            .then(res.send(boardData))
+            .catch(err => {throw err})
+        })
+        .catch(err => {throw err})
+    })
     .catch(err => {throw err});
 });
