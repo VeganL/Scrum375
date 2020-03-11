@@ -93,13 +93,14 @@ app.post("/insertboard", function (req, res) {
         pool
         .query("SELECT board_ids FROM accounts WHERE user_id=" + ownerId)
         .then(vals => {
-            let idArr = JSON.parse(vals[0]);
+            let board_ids = vals[0].board_ids;
+            let idArr = board_ids.substr(1,board_ids.length - 1).split(',');
             idArr.push(parseInt(rows[0]));
             let boardIds = JSON.stringify(idArr);
 
             pool
             .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE user_id=" + ownerId)
-            .then(res.send(boardData))
+            .then(res.send(JSON.parse(boardData)))
             .catch(err => {throw err})
         })
         .catch(err => {throw err})
