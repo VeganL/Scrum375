@@ -84,6 +84,6 @@ app.post("/insertboard", function (req, res) {
 
     pool
     .query("INSERT INTO boards (owner_id, board_data) VALUES (" + ownerId + ", '" + boardData + "')")
-    .then(res.send('"Board created"'))
+    .then(res.send(boardData))
     .catch(err => {throw err});
 });
