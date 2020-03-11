@@ -75,5 +75,15 @@ app.post("/getboards", function (req, res) {
 });
 
 app.post("/insertboard", function (req, res) {
+    let ownerId = req.body.owner_id; //same as user_id in other parts of project, but specifically who owns board
+    let boardName = req.body.board_name;
+    let date = new Date()
+    let boardDate = date.toISOString().substring(0,10);
 
+    let boardData = '{"board_name": "' + boardName + '", "date_created": "' + boardDate + '", "date_modified": "' + boardDate + '", "member_amt": 1, "task_amt": 0}';
+
+    pool
+    .query("INSERT INTO boards (owner_id, board_data) VALUES (" + ownerId + ", '" + boardData + "')")
+    .then(res.send('"Board created"'))
+    .catch(err => {throw err});
 });
