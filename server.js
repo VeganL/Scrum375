@@ -114,6 +114,33 @@ app.post("/insertboard", function (req, res) {
     .catch(err => {throw err});
 });
 
+app.post("/gettasks", function (req,res) {
+    let boardId = req.body.board_id;
+
+    pool
+    .query("SELECT task_data FROM tasks WHERE board_id=" + boardId)
+    .then(rows => {
+        res.send(rows);
+    })
+    .catch(err => {throw err});
+});
+
+app.post("/inserttask", function (req,res) {
+    let boardId = req.body.board_id;
+    let task = req.body.task;
+    let ownerName = req.body.owner;
+    let dueDate = req.body.due_date;
+    let date = new Date()
+    let createDate = date.toISOString().substring(0,10);
+
+    let taskData = '{"task": "' + task + '", "owner": "' + ownerName + '", "due_date": "' + dueDate + '", "status": 0, "date_created": "' + createDate + '", "date_modified": "' + createDate + '"}';
+
+    pool
+    .query("INSERT INTO tasks (board_id,task_data) VALUES (" + boardId + ", '" + taskData + "')")
+    .then(res.send(JSON.parse(taskData)))
+    .catch(err => {throw err});
+});
+
 app.get("/Profile/:username", function (req,res) {
     let username = req.params.username;
 
