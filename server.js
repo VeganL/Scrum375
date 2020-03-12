@@ -136,6 +136,19 @@ app.post("/inserttask", function (req,res) {
     let taskData = '{"task": "' + task + '", "owner": "' + ownerName + '", "due_date": "' + dueDate + '", "status": 0, "date_created": "' + createDate + '", "date_modified": "' + createDate + '"}';
 
     pool
+    .query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+    .then(rows => {
+        let boardData = JSON.parse(rows[0].board_data);
+
+        boardData.task_amt += 1;
+        boardData.date_modified = createDate;
+
+        let newBoardData = JSON.stringify(boardData);
+
+        pool.query("UPDATE boards SET board_data='" + newBoardData + "' WHERE board_id=" + boardId).then().catch(err => {throw err});
+    })
+
+    pool
     .query("INSERT INTO tasks (board_id,task_data) VALUES (" + boardId + ", '" + taskData + "')")
     .then(res.send(JSON.parse(taskData)))
     .catch(err => {throw err});
