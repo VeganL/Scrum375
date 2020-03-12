@@ -94,8 +94,14 @@ app.post("/insertboard", function (req, res) {
         .query("SELECT board_ids FROM accounts WHERE user_id=" + ownerId)
         .then(vals => {
             let board_ids = vals[0].board_ids;
-            let idArr = board_ids.substr(1,board_ids.length - 1).split(',');
-            idArr.push(parseInt(rows[0]));
+            let idStrArr = board_ids.substr(1,board_ids.length).split(',');
+            let idArr = [];
+
+            for (var i = 0; i< idArr.length; i++) {
+                idArr.push(parseInt(idStrArr[i]));
+            }
+
+            idArr.push(parseInt(rows[0].board_id));
             let boardIds = JSON.stringify(idArr);
 
             pool
@@ -104,6 +110,21 @@ app.post("/insertboard", function (req, res) {
             .catch(err => {throw err})
         })
         .catch(err => {throw err})
+    })
+    .catch(err => {throw err});
+});
+
+app.get("/Profile/:username", function (req,res) {
+    let username = req.params.username;
+
+    pool
+    .query("SELECT avatar, about FROM accounts WHERE username='" + username + "'")
+    .then(rows => {
+        if (typeof rows[0] !== 'undefined') {
+            res.send(rows[0]);
+        } else {
+            res.send('"User does not exist."');
+        }
     })
     .catch(err => {throw err});
 });
