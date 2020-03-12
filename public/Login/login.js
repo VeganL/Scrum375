@@ -1,4 +1,4 @@
-function checkForm() {
+function validateForm() {
 	let nameValid = false;
 	let passwordValid = false;
 	let errorMsg = '<ul>';
@@ -25,25 +25,37 @@ function checkForm() {
 
 	if (nameValid && passwordValid) {
 		document.getElementById("formErrors").style.display = "none";
+		return true;
 	} else {
 		document.getElementById("formErrors").innerHTML = errorMsg;
 		document.getElementById("formErrors").style.display = "block";
+		return false;
 	}
 }
 
 function signinResponseReceivedHandler()
 {
-	if(this.responseText != "Username or password is incorrect.")
+	if (this.responseText != "Username or password is incorrect.")
 	{
 		let response = JSON.parse(this.responseText);
 		console.log(response.user_id);
 		localStorage.setItem("userId",response.user_id);
 		window.location.href = "../Boards/";
+	} else {
+		document.getElementById("username").style.border = "2px solid red";
+		document.getElementById("password").style.border = "2px solid red";
+		let errorMsg = '<ul><li>' + this.responseText + '</li></ul>';
+		document.getElementById("formErrors").innerHTML = errorMsg;
+		document.getElementById("formErrors").style.display = "block";
 	}
 }
 
 document.getElementById("submit").addEventListener("click", function(event) {
-	checkForm();
+	// Prevent default form action. DO NOT REMOVE THIS LINE
+	event.preventDefault();
+
+	if (!validateForm())
+		return;
 
 	let username = document.getElementById("username").value;
 	let password = document.getElementById("password").value;
@@ -56,5 +68,5 @@ document.getElementById("submit").addEventListener("click", function(event) {
 	xmlHttp.send("username=" + username +"&password="+ password);
 	
 	// Prevent default form action. DO NOT REMOVE THIS LINE
-	event.preventDefault();
+	// event.preventDefault();
 });
