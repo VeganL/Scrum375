@@ -97,7 +97,7 @@ app.post("/insertboard", function (req, res) {
             let idStrArr = board_ids.substr(1,board_ids.length).split(',');
             let idArr = [];
 
-            for (var i = 0; i< idArr.length; i++) {
+            for (var i = 0; i< idStrArr.length; i++) {
                 idArr.push(parseInt(idStrArr[i]));
             }
 
