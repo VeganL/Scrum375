@@ -28,7 +28,7 @@ app.post("/signin", function (req, res) {
         if (typeof rows[0] !== 'undefined') {
             res.send(rows[0]);
         } else {
-            res.send('"Username or password is incorrect."');
+            res.send("Username or password is incorrect.");
         }
 	})
 	.catch(err => {
