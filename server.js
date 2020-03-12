@@ -114,6 +114,93 @@ app.post("/insertboard", function (req, res) {
     .catch(err => {throw err});
 });
 
+app.post("/updateboardname", function (req, res) {
+    let boardId = req.body.board_id;
+    let newName = req.body.newName;
+    let oldName = req.body.oldName;
+    let oldData = '';
+    let newData = '';
+
+    if (newName === oldName)
+        return;
+
+    pool
+        .query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+        .then(rows => {
+            if (typeof rows[0] === 'undefined') {
+                oldData = JSON.parse(rows[0]);
+            } else {
+                res.send("Board ID '" + boardId + "' does not exist.");
+            }
+        })
+        .catch(err => { throw err });
+
+    oldData.board_name = newName;
+    newData = JSON.stringify(oldData);
+    pool
+        .query("UPDATE boards SET board_data='" + newData + "' WHERE board_id=" + boardId)
+        .then()
+        .catch(err => { throw err });
+});
+
+app.post("/updateboardmemberamt", function (req, res) {
+    let boardId = req.body.board_id;
+    let newAmt = req.body.newAmt;
+    let oldAmt = req.body.oldAmt;
+    let oldData = '';
+    let newData = '';
+
+    if (newAmt === oldAmt)
+        return;
+
+    pool
+        .query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+        .then(rows => {
+            if (typeof rows[0] === 'undefined') {
+                oldData = JSON.parse(rows[0]);
+            } else {
+                res.send("Board ID '" + boardId + "' does not exist.");
+            }
+        })
+        .catch(err => { throw err });
+
+    oldData.member_amt = newAmt;
+    newData = JSON.stringify(oldData);
+    pool
+        .query("UPDATE boards SET board_data='" + newData + "' WHERE board_id=" + boardId)
+        .then()
+        .catch(err => { throw err });
+});
+
+app.post("/updateboardtaskamt", function (req, res) {
+    let boardId = req.body.board_id;
+    let newAmt = req.body.newAmt;
+    let oldAmt = req.body.oldAmt;
+    let oldData = '';
+    let newData = '';
+
+    if (newAmt === oldAmt)
+        return;
+
+    pool
+        .query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+        .then(rows => {
+            if (typeof rows[0] === 'undefined') {
+                oldData = JSON.parse(rows[0]);
+            } else {
+                res.send("Board ID '" + boardId + "' does not exist.");
+            }
+        })
+        .catch(err => { throw err });
+
+    oldData.task_amt = newAmt;
+    newData = JSON.stringify(oldData);
+    pool
+        .query("UPDATE boards SET board_data='" + newData + "' WHERE board_id=" + boardId)
+        .then()
+        .catch(err => { throw err });
+});
+
 app.post("/gettasks", function (req,res) {
     let boardId = req.body.board_id;
 
