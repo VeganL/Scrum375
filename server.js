@@ -28,7 +28,7 @@ app.post("/signin", function (req, res) {
         if (typeof rows[0] !== 'undefined') {
             res.send(rows[0]);
         } else {
-            res.send("Username or password is incorrect.");
+            res.send(JSON.parse("Username or password is incorrect."));
         }
 	})
 	.catch(err => {
@@ -47,12 +47,12 @@ app.post("/registernew", function (req, res) {
         if (typeof rows[0] === 'undefined') {
             pool
             .query("INSERT INTO accounts (username, password, email) VALUES ('" + username + "', '" + password + "', '" + email + "')")
-            .then(res.send('"Registration success"'))
+            .then(res.send(JSON.parse('"Registration success"')))
             .catch(err => {
                 throw err;
             });
         } else {
-            res.send('"Username or email already used."')
+            res.send(JSON.parse('"Username or email already used."'))
         }
     })
     .catch(err => {
@@ -106,12 +106,28 @@ app.post("/insertboard", function (req, res) {
 
             pool
             .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE user_id=" + ownerId)
-            .then(res.send(JSON.parse(boardData)))
-            .catch(err => {throw err})
+            //.then(res.send(JSON.parse('{"board_id": ' + rows[0].board_id + ', "owner_id": ' + ownerId + ', "board_data": ' + boardData + '}')))
+            .then().catch(err => {throw err})
         })
         .catch(err => {throw err})
     })
     .catch(err => {throw err});
+
+    pool
+    .query("SELECT board_ids FROM accounts WHERE user_id=" + ownerId)
+    .then(rows => {
+        let boardIds = rows[0].board_ids;
+        let boardIdSet = boardIds.substr(1, boardIds.length - 1)
+
+        pool
+        .query("SELECT board_id,owner_id,board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
+        .then(rows => {
+            res.send(rows);
+        })
+        .catch(err => {
+            throw err;
+        });
+    })
 });
 
 app.post("/updateboardname", function (req, res) {
@@ -234,11 +250,79 @@ app.post("/inserttask", function (req,res) {
 
         pool.query("UPDATE boards SET board_data='" + newBoardData + "' WHERE board_id=" + boardId).then().catch(err => {throw err});
     })
+    .catch(err => {throw err});
 
     pool
     .query("INSERT INTO tasks (board_id,task_data) VALUES (" + boardId + ", '" + taskData + "')")
-    .then(res.send(JSON.parse(taskData)))
+    .then().catch(err => {throw err});
+
+    pool
+    .query("SELECT task_data FROM tasks WHERE board_id=" + boardId)
+    .then(rows => {
+        res.send(rows);
+    })
     .catch(err => {throw err});
+});
+
+app.post("/insertmember", function (res,req) {
+    let boardId = req.body.board_id;
+    let userList = JSON.parse(req.body.user_list);
+
+    let date = new Date()
+    let modDate = date.toISOString().substring(0,10);
+
+    for (var i = 0; i<userList.length; i++) {
+        pool
+        .query("SELECT board_ids FROM accounts WHERE username='" + userList[i] + "'")
+        .then(rows => {
+            let board_ids = rows[0].board_ids;
+            let idStrArr = board_ids.substr(1,board_ids.length).split(',');
+            let idArr = [];
+
+            for (var i = 0; i< idStrArr.length; i++) {
+                idArr.push(parseInt(idStrArr[i]));
+            }
+
+            idArr.push(parseInt(boardId));
+            let boardIds = JSON.stringify(idArr);
+
+            pool
+            .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE username=" + userList[i])
+            .then()
+            .catch(err => {throw err})
+        })
+        .catch(err => {throw err});
+    }
+
+    pool
+    .query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+    .then(rows => {
+        let boardData = JSON.parse(rows[0].board_data);
+
+        boardData.date_modified = modDate;
+
+        let newBoardData = JSON.stringify(boardData);
+
+        pool.query("UPDATE boards SET board_data='" + newBoardData + "' WHERE board_id=" + boardId)
+        .then().catch(err => {throw err});
+    })
+    .catch(err => {throw err});
+
+    pool
+    .query("SELECT board_ids FROM accounts WHERE user_id=" + ownerId)
+    .then(rows => {
+        let boardIds = rows[0].board_ids;
+        let boardIdSet = boardIds.substr(1, boardIds.length - 1)
+
+        pool
+        .query("SELECT board_id,owner_id,board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
+        .then(rows => {
+            res.send(rows);
+        })
+        .catch(err => {
+            throw err;
+        });
+    })
 });
 
 app.get("/Profile/:username", function (req,res) {
@@ -250,7 +334,7 @@ app.get("/Profile/:username", function (req,res) {
         if (typeof rows[0] !== 'undefined') {
             res.send(rows[0]);
         } else {
-            res.send('"User does not exist."');
+            res.send(JSON.parse('"User does not exist."'));
         }
     })
     .catch(err => {throw err});
