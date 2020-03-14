@@ -290,7 +290,8 @@ app.post("/inserttask", function (req,res) {
 
 app.post("/insertmember", function (req,res) {
     let boardId = req.body.board_id;
-    let userList = JSON.parse(req.body.user_list);
+    let user_list = req.body.user_list;
+    let userList = user_list.substring(1,user_list.length).split(',');
 
     let date = new Date()
     let modDate = date.toISOString().substring(0,10);
@@ -315,9 +316,9 @@ app.post("/insertmember", function (req,res) {
         pool
         .query("SELECT board_ids FROM accounts WHERE username='" + userList[i] + "'")
         .then(rows => {
-            if (rows[0].board_ids === null) {
+            if (typeof rows[0] === 'undefined') {
                 pool
-                .query("UPDATE accounts SET board_ids='[" + boardId + "]' WHERE username=" + userList[i])
+                .query("UPDATE accounts SET board_ids='[" + boardId + "]' WHERE username='" + userList[i] + "'")
                 .then().catch(err => {throw err})
             } else {
                 let board_ids = rows[0].board_ids;
@@ -339,6 +340,7 @@ app.post("/insertmember", function (req,res) {
         })
         .catch(err => {throw err});
     }
+    res.send('');
 });
 
 app.get("/Profile/:username", function (req,res) {
