@@ -74,7 +74,7 @@ app.post("/getboards", function (req, res) {
     });
 });
 
-app.post("/insertboard", function (req, res) { //TODO: HANDLE USERS WHO HAVE NULL board_ids
+app.post("/insertboard", function (req, res) {
     let ownerId = req.body.owner_id; //same as user_id in other parts of project, but specifically who owns board
     let boardName = req.body.board_name;
     let date = new Date()
@@ -92,39 +92,60 @@ app.post("/insertboard", function (req, res) { //TODO: HANDLE USERS WHO HAVE NUL
     .then(rows => {
         pool
         .query("SELECT board_ids FROM accounts WHERE user_id=" + ownerId)
-        .then(vals => { //FIX HERE
-            let board_ids = vals[0].board_ids;
-            let idStrArr = board_ids.substr(1,board_ids.length).split(',');
-            let idArr = [];
+        .then(vals => {
+            if (vals[0].board_ids === null) {
+                pool
+                .query("UPDATE accounts SET board_ids='[" + rows[0].board_id + "]' WHERE user_id=" + ownerId)
+                .then(
+                    pool
+                    .query("SELECT board_ids FROM accounts WHERE user_id=" + ownerId)
+                    .then(rows => {
+                        let boardIds = rows[0].board_ids;
+                        let boardIdSet = boardIds.substr(1, boardIds.length - 2)
 
-            for (var i = 0; i< idStrArr.length; i++) {
-                idArr.push(parseInt(idStrArr[i]));
+                        pool
+                        .query("SELECT board_id,owner_id,board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
+                        .then(rows => {
+                            res.send(rows);
+                        })
+                        .catch(err => {
+                            throw err;
+                        });
+                    })
+                )
+            } else {
+                let board_ids = vals[0].board_ids;
+                let idStrArr = board_ids.substr(1,board_ids.length).split(',');
+                let idArr = [];
+
+                for (var i = 0; i< idStrArr.length; i++) {
+                    idArr.push(parseInt(idStrArr[i]));
+                }
+
+                idArr.push(parseInt(rows[0].board_id));
+                let boardIds = JSON.stringify(idArr);
+
+                pool
+                .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE user_id=" + ownerId)
+                .then(
+                    pool
+                    .query("SELECT board_ids FROM accounts WHERE user_id=" + ownerId)
+                    .then(rows => {
+                        let boardIds = rows[0].board_ids;
+                        let boardIdSet = boardIds.substr(1, boardIds.length - 2)
+
+                        pool
+                        .query("SELECT board_id,owner_id,board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
+                        .then(rows => {
+                            res.send(rows);
+                        })
+                        .catch(err => {
+                            throw err;
+                        });
+                    })
+                )
+                .catch(err => {throw err})
             }
-
-            idArr.push(parseInt(rows[0].board_id));
-            let boardIds = JSON.stringify(idArr);
-
-            pool
-            .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE user_id=" + ownerId)
-            //.then(res.send(JSON.parse('{"board_id": ' + rows[0].board_id + ', "owner_id": ' + ownerId + ', "board_data": ' + boardData + '}')))
-            .then(
-		    pool
-		    .query("SELECT board_ids FROM accounts WHERE user_id=" + ownerId)
-		    .then(rows => {
-			let boardIds = rows[0].board_ids;
-			let boardIdSet = boardIds.substr(1, boardIds.length - 2)
-
-			pool
-			.query("SELECT board_id,owner_id,board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
-			.then(rows => {
-			    res.send(rows);
-			})
-			.catch(err => {
-			    throw err;
-			});
-		    })
-	    )
-            .catch(err => {throw err})
         })
         .catch(err => {throw err})
     })
@@ -267,7 +288,7 @@ app.post("/inserttask", function (req,res) {
 
 });
 
-app.post("/insertmember", function (req,res) { //TODO: HANDLE USERS WHO HAVE NULL board_ids
+app.post("/insertmember", function (req,res) {
     let boardId = req.body.board_id;
     let userList = JSON.parse(req.body.user_list);
 
@@ -280,11 +301,12 @@ app.post("/insertmember", function (req,res) { //TODO: HANDLE USERS WHO HAVE NUL
         let boardData = JSON.parse(rows[0].board_data);
 
         boardData.date_modified = modDate;
-	boardData.member_amt += userList.length;
+	    boardData.member_amt += userList.length;
 
         let newBoardData = JSON.stringify(boardData);
 
-        pool.query("UPDATE boards SET board_data='" + newBoardData + "' WHERE board_id=" + boardId)
+        pool
+        .query("UPDATE boards SET board_data='" + newBoardData + "' WHERE board_id=" + boardId)
         .then().catch(err => {throw err});
     })
     .catch(err => {throw err});
@@ -292,22 +314,28 @@ app.post("/insertmember", function (req,res) { //TODO: HANDLE USERS WHO HAVE NUL
     for (var i = 0; i<userList.length; i++) {
         pool
         .query("SELECT board_ids FROM accounts WHERE username='" + userList[i] + "'")
-        .then(rows => { //FIX HERE
-            let board_ids = rows[0].board_ids;
-            let idStrArr = board_ids.substr(1,board_ids.length).split(',');
-            let idArr = [];
+        .then(rows => {
+            if (rows[0].board_ids === null) {
+                pool
+                .query("UPDATE accounts SET board_ids='[" + boardId + "]' WHERE username=" + userList[i])
+                .then().catch(err => {throw err})
+            } else {
+                let board_ids = rows[0].board_ids;
+                let idStrArr = board_ids.substr(1,board_ids.length).split(',');
+                let idArr = [];
 
-            for (var i = 0; i< idStrArr.length; i++) {
-                idArr.push(parseInt(idStrArr[i]));
+                for (var i = 0; i< idStrArr.length; i++) {
+                    idArr.push(parseInt(idStrArr[i]));
+                }
+
+                idArr.push(parseInt(boardId));
+                let boardIds = JSON.stringify(idArr);
+
+                pool
+                .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE username=" + userList[i])
+                .then().catch(err => {throw err})
             }
-
-            idArr.push(parseInt(boardId));
-            let boardIds = JSON.stringify(idArr);
-
-            pool
-            .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE username=" + userList[i])
-            .then()
-            .catch(err => {throw err})
+            
         })
         .catch(err => {throw err});
     }
