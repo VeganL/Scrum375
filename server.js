@@ -182,7 +182,11 @@ app.post("/updateboardname", function (req, res) { //TODO: Make this function up
         .catch(err => { throw err });
 });
 
-app.post("/updateboardmemberamt", function (req, res) {
+app.post("/deleteboard", function (req,res) { //TODO: Complete this
+    
+});
+
+/*app.post("/updateboardmemberamt", function (req, res) {
     let boardId = req.body.board_id;
     let newAmt = req.body.newAmt;
     let oldAmt = req.body.oldAmt;
@@ -238,7 +242,7 @@ app.post("/updateboardtaskamt", function (req, res) {
         .query("UPDATE boards SET board_data='" + newData + "' WHERE board_id=" + boardId)
         .then()
         .catch(err => { throw err });
-});
+});*/
 
 app.post("/gettasks", function (req,res) {
     let boardId = req.body.board_id;
@@ -287,6 +291,14 @@ app.post("/inserttask", function (req,res) {
     ).catch(err => {throw err});
 });
 
+app.post("/promotetask", function (req,res) { //TODO: Complete this
+
+});
+
+app.post("demotetask", function (req,res) { //TODO: Complete this
+
+});
+
 app.post("/deletetask", function (req,res) {
     let taskData = req.body.task_data;
     let date = new Date()
@@ -322,7 +334,7 @@ app.post("/deletetask", function (req,res) {
 app.post("/insertmembers", function (req,res) {
     let boardId = req.body.board_id;
     let user_list = req.body.user_list;
-    let userList = user_list.substring(1,user_list.length - 1).split(',');
+    let userList = user_list.substring(1,user_list.length - 1).split(','); //might have to modify this to (', ') depending on how front-end formats
 
     let date = new Date()
     let modDate = date.toISOString().substring(0,10);
@@ -349,7 +361,9 @@ app.post("/insertmembers", function (req,res) {
         pool
         .query("SELECT board_ids FROM accounts WHERE username=" + user)
         .then(rows => {
-            if (rows[0].board_ids === null) {
+            if (typeof rows[0] === 'undefined') {
+                continue;
+            } else if (rows[0].board_ids === null) {
                 pool
                 .query("UPDATE accounts SET board_ids='[" + boardId + "]' WHERE username=" + user)
                 .then().catch(err => {throw err})
@@ -375,6 +389,65 @@ app.post("/insertmembers", function (req,res) {
     res.send('"Queries sent to insert members"');
 });
 
+app.post("/deletemembers", function (req,res) {
+    let boardId = req.body.board_id;
+    let user_list = req.body.user_list;
+    let userList = user_list.substring(1,user_list.length - 1).split(','); //might have to modify this to (', ') depending on how front-end formats
+
+    let date = new Date()
+    let modDate = date.toISOString().substring(0,10);
+
+    pool
+    .query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+    .then(rows => {
+        let boardData = JSON.parse(rows[0].board_data);
+
+        boardData.date_modified = modDate;
+	    boardData.member_amt -= userList.length;
+
+        let newBoardData = JSON.stringify(boardData);
+
+        pool
+        .query("UPDATE boards SET board_data='" + newBoardData + "' WHERE board_id=" + boardId)
+        .then().catch(err => {throw err});
+    })
+    .catch(err => {throw err});
+
+    for (var i = 0; i<userList.length; i++) {
+	    let user = userList[i];
+	
+        pool
+        .query("SELECT board_ids FROM accounts WHERE username=" + user)
+        .then(rows => {
+            if ((typeof rows[0] === 'undefined') || (rows[0].board_ids === null)) {
+                continue;
+            } else {
+                let board_ids = rows[0].board_ids;
+                let idStrArr = board_ids.substr(1,board_ids.length).split(',');
+                let idArr = [];
+
+                for (var i = 0; i< idStrArr.length; i++) {
+                    idArr.push(parseInt(idStrArr[i]));
+                }
+
+                idArr.pop();
+                if (idArr.length === 0) {
+                    pool
+                    .query("UPDATE accounts SET board_ids=NULL WHERE username=" + user)
+                    .then().catch(err => {throw err})
+                } else {
+                    let boardIds = JSON.stringify(idArr);
+
+                    pool
+                    .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE username=" + user)
+                    .then().catch(err => {throw err})
+                }
+            }
+        }).catch(err => {throw err});
+    }
+    res.send('"Queries sent to delete members"');
+});
+
 app.get("/Profile/:username", function (req,res) {
     let username = req.params.username;
 
@@ -388,4 +461,18 @@ app.get("/Profile/:username", function (req,res) {
         }
     })
     .catch(err => {throw err});
+});
+
+app.post("/updateabout", function (req,res) {
+    let userId = req.body.user_id;
+    let newAbout = req.body.about;
+
+    pool
+    .query('UPDATE accounts SET about="' + newAbout + '" WHERE user_id=' + userId)
+    .then(
+        pool.query("SELECT avatar, about FROM accounts WHERE user_id=" + userId)
+        .then(rows => {
+            res.send(rows[0]);
+        }).catch(err => {throw err})
+    ).catch(err => {throw err});
 });
