@@ -288,7 +288,35 @@ app.post("/inserttask", function (req,res) {
 });
 
 app.post("/deletetask", function (req,res) {
+    let taskData = req.body.task_data;
+    let date = new Date()
+    let modDate = date.toISOString().substring(0,10);
 
+    pool
+    .query("SELECT board_id FROM tasks WHERE task_data='" + taskData + "'")
+    .then(rows => {
+        let boardId = rows[0].board_id;
+
+        pool
+        .query("DELETE FROM tasks WHERE task_data='" + taskData + "'")
+        .then(
+            pool
+            .query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+            .then(vals => {
+                let boardData = JSON.parse(vals[0].board_data);
+        
+                boardData.task_amt -= 1;
+                boardData.date_modified = modDate;
+        
+                let newBoardData = JSON.stringify(boardData);
+        
+                pool.query("UPDATE boards SET board_data='" + newBoardData + "' WHERE board_id=" + boardId).then(
+                    pool.query("SELECT task_data FROM tasks WHERE board_id=" + boardId).then(resp => {res.send(resp)}).catch(err => {throw err})
+                ).catch(err => {throw err});
+            })
+        ).catch(err => {throw err});
+    })
+    .catch(err => {throw err});
 });
 
 app.post("/insertmembers", function (req,res) {
