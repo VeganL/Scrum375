@@ -182,10 +182,6 @@ app.post("/updateboardname", function (req, res) { //TODO: Make this function up
         .catch(err => { throw err });
 });
 
-app.post("/deleteboard", function (req,res) { //TODO: Complete this
-    
-});
-
 /*app.post("/updateboardmemberamt", function (req, res) {
     let boardId = req.body.board_id;
     let newAmt = req.body.newAmt;
