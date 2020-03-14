@@ -314,11 +314,11 @@ app.post("/insertmember", function (req,res) {
 
     for (var i = 0; i<userList.length; i++) {
         pool
-        .query("SELECT board_ids FROM accounts WHERE username='" + userList[i] + "'")
+        .query("SELECT board_ids FROM accounts WHERE username=" + userList[i])
         .then(rows => {
             if (typeof rows[0] === 'undefined') {
                 pool
-                .query("UPDATE accounts SET board_ids='[" + boardId + "]' WHERE username='" + userList[i] + "'")
+                .query("UPDATE accounts SET board_ids='[" + boardId + "]' WHERE username=" + userList[i])
                 .then().catch(err => {throw err})
             } else {
                 let board_ids = rows[0].board_ids;
