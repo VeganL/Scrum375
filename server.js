@@ -153,7 +153,7 @@ app.post("/insertboard", function (req, res) {
 
 });
 
-app.post("/updateboardname", function (req, res) {
+app.post("/updateboardname", function (req, res) { //TODO: Make this function update date_modified
     let boardId = req.body.board_id;
     let newName = req.body.newName;
     let oldName = req.body.oldName;
@@ -285,10 +285,13 @@ app.post("/inserttask", function (req,res) {
 	    })
 	    .catch(err => {throw err})
     ).catch(err => {throw err});
+});
+
+app.post("/deletetask", function (req,res) {
 
 });
 
-app.post("/insertmember", function (req,res) {
+app.post("/insertmembers", function (req,res) {
     let boardId = req.body.board_id;
     let user_list = req.body.user_list;
     let userList = user_list.substring(1,user_list.length - 1).split(',');
@@ -313,7 +316,7 @@ app.post("/insertmember", function (req,res) {
     .catch(err => {throw err});
 
     for (var i = 0; i<userList.length; i++) {
-	let user = userList[i];
+	    let user = userList[i];
 	
         pool
         .query("SELECT board_ids FROM accounts WHERE username=" + user)
@@ -338,11 +341,10 @@ app.post("/insertmember", function (req,res) {
                 .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE username=" + user)
                 .then().catch(err => {throw err})
             }
-            
         })
         .catch(err => {throw err});
     }
-    res.send('');
+    res.send('"Queries sent to insert members"');
 });
 
 app.get("/Profile/:username", function (req,res) {
