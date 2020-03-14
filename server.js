@@ -291,7 +291,7 @@ app.post("/inserttask", function (req,res) {
 app.post("/insertmember", function (req,res) {
     let boardId = req.body.board_id;
     let user_list = req.body.user_list;
-    let userList = user_list.substring(1,user_list.length).split(',');
+    let userList = user_list.substring(1,user_list.length - 1).split(',');
 
     let date = new Date()
     let modDate = date.toISOString().substring(0,10);
@@ -313,12 +313,14 @@ app.post("/insertmember", function (req,res) {
     .catch(err => {throw err});
 
     for (var i = 0; i<userList.length; i++) {
+	let user = userList[i];
+	
         pool
-        .query("SELECT board_ids FROM accounts WHERE username=" + userList[i])
+        .query("SELECT board_ids FROM accounts WHERE username=" + user)
         .then(rows => {
-            if (typeof rows[0] === 'undefined') {
+            if (rows[0].board_ids === null) {
                 pool
-                .query("UPDATE accounts SET board_ids='[" + boardId + "]' WHERE username=" + userList[i])
+                .query("UPDATE accounts SET board_ids='[" + boardId + "]' WHERE username=" + user)
                 .then().catch(err => {throw err})
             } else {
                 let board_ids = rows[0].board_ids;
@@ -333,7 +335,7 @@ app.post("/insertmember", function (req,res) {
                 let boardIds = JSON.stringify(idArr);
 
                 pool
-                .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE username=" + userList[i])
+                .query("UPDATE accounts SET board_ids='" + boardIds + "' WHERE username=" + user)
                 .then().catch(err => {throw err})
             }
             
