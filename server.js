@@ -362,7 +362,19 @@ app.post("/insertmembers", function (req,res) {
         .query("SELECT board_ids FROM accounts WHERE username=" + user)
         .then(rows => {
             if (typeof rows[0] === 'undefined') {
-                continue;
+                pool
+                .query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+                .then(rows => {
+                    let boardData = JSON.parse(rows[0].board_data);
+                    boardData.member_amt -= 1;
+
+                    let newBoardData = JSON.stringify(boardData);
+
+                    pool
+                    .query("UPDATE boards SET board_data='" + newBoardData + "' WHERE board_id=" + boardId)
+                    .then().catch(err => {throw err});
+                })
+                .catch(err => {throw err});
             } else if (rows[0].board_ids === null) {
                 pool
                 .query("UPDATE accounts SET board_ids='[" + boardId + "]' WHERE username=" + user)
@@ -420,7 +432,19 @@ app.post("/deletemembers", function (req,res) {
         .query("SELECT board_ids FROM accounts WHERE username=" + user)
         .then(rows => {
             if ((typeof rows[0] === 'undefined') || (rows[0].board_ids === null)) {
-                continue;
+                pool
+                .query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+                .then(rows => {
+                    let boardData = JSON.parse(rows[0].board_data);
+                    boardData.member_amt += 1;
+
+                    let newBoardData = JSON.stringify(boardData);
+
+                    pool
+                    .query("UPDATE boards SET board_data='" + newBoardData + "' WHERE board_id=" + boardId)
+                    .then().catch(err => {throw err});
+                })
+                .catch(err => {throw err});
             } else {
                 let board_ids = rows[0].board_ids;
                 let idStrArr = board_ids.substr(1,board_ids.length).split(',');
