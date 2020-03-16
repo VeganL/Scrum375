@@ -155,35 +155,25 @@ app.post("/insertboard", function (req, res) {
 
 app.post("/updateboardname", function (req, res) {
     let boardId = req.body.board_id;
-    let newName = req.body.newName;
-    let oldName = req.body.oldName;
-    let oldData = '';
-    let newData = '';
-	let date = new Date()
+    let newName = req.body.new_name;
+
+    let date = new Date()
     let boardDate = date.toISOString().substring(0,10);
 
-    if (newName === oldName)
-        return;
-
     pool
-        .query("SELECT board_data FROM boards WHERE board_id=" + boardId)
-        .then(rows => {
-            if (typeof rows[0] === 'undefined') {
-                oldData = JSON.parse(rows[0]);
-            } else {
-                res.send("Board ID '" + boardId + "' does not exist.");
-            }
-        })
-        .catch(err => { throw err });
+    .query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+    .then(rows => {
+        let oldData = JSON.parse(rows[0].board_data);
+        oldData.board_name = newName;
+        oldData.date_modified = boardDate;
+        let newData = JSON.stringify(oldData);
 
-    oldData.board_name = newName;
-	oldData.date_modified = boardDate;
-    newData = JSON.stringify(oldData);
-	
-    pool
+        pool
         .query("UPDATE boards SET board_data='" + newData + "' WHERE board_id=" + boardId)
-        .then()
+        .then(res.send(oldData))
         .catch(err => { throw err });
+    })
+    .catch(err => { throw err });
 });
 
 app.post("/gettasks", function (req,res) {
