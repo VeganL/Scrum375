@@ -233,12 +233,72 @@ app.post("/inserttask", function (req,res) {
     ).catch(err => {throw err});
 });
 
-app.post("/promotetask", function (req,res) { //TODO: Complete this
+app.post("/promotetask", function (req,res) {
+    let task_data = req.body.task_data;
+    let taskData = JSON.parse(task_data);
 
+    let date = new Date()
+    let modDate = date.toISOString().substring(0,10);
+
+    pool.query("SELECT board_id FROM tasks WHERE task_data='" + task_data + "'")
+    .then(rows => {
+        let boardId = rows[0].board_id;
+
+        pool.query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+        .then(vals => {
+            let boardData = JSON.parse(vals[0].board_data);
+            boardData.date_modified = modDate;
+            let newBoardData = JSON.stringify(boardData);
+
+            pool
+            .query("UPDATE boards SET board_data='" + newBoardData + "' WHERE board_id=" + boardId)
+            .then().catch(err => {throw err});  
+        }).catch(err => {throw err});
+    }).catch(err => {throw err});
+
+    taskData.date_modified = modDate;
+    if (taskData.status < 2) {
+        taskData.status += 1;
+    }
+    
+    let newTaskData = JSON.stringify(taskData);
+
+    pool.query("UPDATE tasks SET task_data='" + newTaskData + "' WHERE task_data='" + task_data +"'")
+    .then(res.send(taskData)).catch(err => {throw err});
 });
 
-app.post("demotetask", function (req,res) { //TODO: Complete this
+app.post("/demotetask", function (req,res) {
+    let task_data = req.body.task_data;
+    let taskData = JSON.parse(task_data);
 
+    let date = new Date()
+    let modDate = date.toISOString().substring(0,10);
+
+    pool.query("SELECT board_id FROM tasks WHERE task_data='" + task_data + "'")
+    .then(rows => {
+        let boardId = rows[0].board_id;
+
+        pool.query("SELECT board_data FROM boards WHERE board_id=" + boardId)
+        .then(vals => {
+            let boardData = JSON.parse(vals[0].board_data);
+            boardData.date_modified = modDate;
+            let newBoardData = JSON.stringify(boardData);
+
+            pool
+            .query("UPDATE boards SET board_data='" + newBoardData + "' WHERE board_id=" + boardId)
+            .then().catch(err => {throw err});  
+        }).catch(err => {throw err});
+    }).catch(err => {throw err});
+
+    taskData.date_modified = modDate;
+    if (taskData.status > 0) {
+        taskData.status -= 1;
+    }
+    
+    let newTaskData = JSON.stringify(taskData);
+
+    pool.query("UPDATE tasks SET task_data='" + newTaskData + "' WHERE task_data='" + task_data +"'")
+    .then(res.send(taskData)).catch(err => {throw err});
 });
 
 app.post("/deletetask", function (req,res) {
