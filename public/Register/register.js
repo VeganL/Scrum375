@@ -1,4 +1,4 @@
-function checkForm() {
+function validateForm() {
     let nameValid = false;
     let emailValid = false;
     let passwordValid = false;
@@ -77,20 +77,36 @@ function checkForm() {
  
     if (nameValid && emailValid && passwordValid && passwordMatch) {
        document.getElementById("formErrors").style.display = "none";
+       return true;
     } else {
        document.getElementById("formErrors").innerHTML = errorMsg;
        document.getElementById("formErrors").style.display = "block";
+       return false;
     }
 }
 
 function registerResponseReceivedHandler()
 {
-	let response = this.responseText;
-	console.log(response);
+    console.log(this.responseText);
+    if (this.responseText != '"Unable to sign in user."'
+        && this.responseText != '"Username or email already used."') {
+        let response = JSON.parse(this.responseText);
+        console.log(response.user_id);
+        localStorage.setItem("userId", response.user_id);
+        window.location.href = "../Boards/";
+    } else {
+        let errorMsg = '<ul><li>' + this.responseText + '</li></ul>';
+        document.getElementById("formErrors").innerHTML = errorMsg;
+        document.getElementById("formErrors").style.display = "block";
+    }
 }
  
-document.getElementById("submit").addEventListener("click", function(event) {
-    checkForm();
+document.getElementById("submit").addEventListener("click", function (event) {
+    // Prevent default form action. DO NOT REMOVE THIS LINE
+    event.preventDefault();
+
+    if (!validateForm())
+        return;
 	
 	let username = document.getElementById("username").value;
 	let email = document.getElementById("email").value;
@@ -105,5 +121,5 @@ document.getElementById("submit").addEventListener("click", function(event) {
 	xmlHttp.send("username=" + username + "&email=" + email + "&password=" + password );
  
     // Prevent default form action. DO NOT REMOVE THIS LINE
-    event.preventDefault();
+    //event.preventDefault();
 });

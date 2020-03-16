@@ -47,7 +47,17 @@ app.post("/registernew", function (req, res) {
         if (typeof rows[0] === 'undefined') {
             pool
             .query("INSERT INTO accounts (username, password, email) VALUES ('" + username + "', '" + password + "', '" + email + "')")
-            .then(res.send('"Registration success"'))
+            .then(
+                pool
+                .query("SELECT user_id FROM accounts WHERE username='" + username + "'")
+                .then(rows => {
+                    if (typeof rows[0] !== 'undefined') {
+                        res.send(rows[0]);
+                    } else {
+                        res.send('"Unable to sign in user."');
+                    }
+                })
+            )
             .catch(err => {
                 throw err;
             });

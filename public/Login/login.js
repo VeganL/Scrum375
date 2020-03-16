@@ -35,7 +35,7 @@ function validateForm() {
 
 function signinResponseReceivedHandler()
 {
-	if (this.responseText != "Username or password is incorrect.")
+	if (this.responseText != '"Username or password is incorrect."')
 	{
 		let response = JSON.parse(this.responseText);
 		console.log(response.user_id);
