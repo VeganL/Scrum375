@@ -93,6 +93,7 @@ function registerResponseReceivedHandler()
         let response = JSON.parse(this.responseText);
         console.log(response.user_id);
         localStorage.setItem("userId", response.user_id);
+        localStorage.setItem("boardIds",response.board_ids);
         window.location.href = "../Boards/";
     } else {
         let errorMsg = '<ul><li>' + this.responseText + '</li></ul>';
