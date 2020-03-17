@@ -7,14 +7,14 @@ document.getElementById("hamburger").addEventListener("click", function (event) 
     }
 });
 
-document.getElementById("createBoard").addEventListener("click", function (event) {
-    let boardArea = document.getElementById('boardArea');
+document.getElementById("createTask").addEventListener("click", function (event) {
+    let boardArea = document.getElementById('taskArea');
 
 });
 
 var createwindow = document.getElementById("create-window");
 
-document.getElementById("createBoard").addEventListener("click", function (event) {
+document.getElementById("createTask").addEventListener("click", function (event) {
     createwindow.style.display = "block";
 });
 
@@ -29,17 +29,17 @@ window.onclick = function (event) {
 }
 
 function validateForm() {
-    let boardName = document.getElementById("boardName");
+    let taskName = document.getElementById("taskName");
     let formErrors = document.getElementById("formErrors");
     let nameValid = false;
     let errorMsg = '<ul>';
 
-    if (boardName.value.length > 0) {
-        boardName.style.border = "1px solid #aaa";
+    if (taskName.value.length > 0) {
+        taskName.style.border = "1px solid #aaa";
         nameValid = true;
     } else {
-        boardName.style.border = "2px solid red";
-        errorMsg += '<li>Missing Board name.</li>';
+        taskName.style.border = "2px solid red";
+        errorMsg += '<li>Missing Task name.</li>';
     }
 
     errorMsg += '</ul>';
@@ -56,7 +56,7 @@ function validateForm() {
 
 function registerResponseReceivedHandler() {
     console.log(this.responseText);
-    if (this.responseText != '"Unable to create board."') {
+    if (this.responseText != '"Unable to create task."') {
         let response = JSON.parse(this.responseText);
         localStorage.setItem("boardIds", response.board_ids);
         window.location.href = "../Boards/";
@@ -93,18 +93,14 @@ document.addEventListener('readystatechange', event => {
         && event.target.readyState !== "complete") {
         return;
     } else {
-        getBoards();
+        getTasks();
     }
 });
 
+function getTasks() {
 
-function loadTasks()
-{
-    //save board Id depending on which board was hit
-    window.location.href = "../Tasks/index.html";
-}
-
-function getBoards() {
+    //get boardId/taskIds from storage and retrieve task info from endpoint, then populate HTML
+    /*
     let boardIds = localStorage.getItem('boardIds');
     if (boardIds !== null) {
         let xmlHttp = new XMLHttpRequest();
@@ -125,7 +121,7 @@ function getBoards() {
                 let modDateStr = modDate.toString().substring(4, 10) + ', ' + modDate.toString().substring(11, 15);
                 let createDateStr = createDate.toString().substring(4, 10) + ', ' + createDate.toString().substring(11, 15);
 
-                boardAreaStr += '<div class="board-card" onclick="loadTasks()"><h3>' + board.board_name + '</h3><p id="lastModified">Last modified: ' + modDateStr + '</p><p id="dateCreated">Created on: ' + createDateStr + '</p><p id="numMembers">Members: ' + String(board.member_amt) + '</p><p id="numTasks">Tasks: ' + String(board.task_amt) + '</p></div>';
+                boardAreaStr += '<div class="board-card"><h3>' + board.board_name + '</h3><p id="lastModified">Last modified: ' + modDateStr + '</p><p id="dateCreated">Created on: ' + createDateStr + '</p><p id="numMembers">Members: ' + String(board.member_amt) + '</p><p id="numTasks">Tasks: ' + String(board.task_amt) + '</p></div>';
             }
 
             boardArea.innerHTML = boardAreaStr;
@@ -137,49 +133,32 @@ function getBoards() {
         xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xmlHttp.send("board_ids=" + boardIds);
     }
+    */
 }
 
-function populateBoardArea(boardsArr) {
-    let boardArea = document.getElementById('boardArea');
-    let boardAreaStr = '';
-    for (var i = 0; i < boardsArr.length; i++) {
-        let board = boardsArr[i];
-        boardAreaStr += '<div class="board-card">' + board.innerHTML + '</div>';
+function populateTaskArea(tasksArr) {
+    let taskArea = document.getElementById('taskArea');
+    let taskAreaStr = '';
+    for (var i = 0; i < tasksArr.length; i++) {
+        let task = tasksArr[i];
+        taskAreaStr += '<div class="task-card">' + task.innerHTML + '</div>';
     }
-    boardArea.innerHTML = boardAreaStr;
+    taskArea.innerHTML = taskAreaStr;
 }
 
-function sortBoards() {
+function sortTasks() {
     let sortBy = document.getElementById("sortBy").value;
-    let boardsArr = Array.from(document.getElementsByClassName("board-card"));
+    let tasksArr = Array.from(document.getElementsByClassName("task-card"));
 
     switch (sortBy) {
-        case "lastModified":
-            boardsArr.sort(compareLastModified);
-            break;
-        case "dateCreated":
-            boardsArr.sort(compareDateCreated);
-            break;
-        case "numMembers":
-            boardsArr.sort(compareNumMembers);
-            break;
-        case "numTasks":
-            boardsArr.sort(compareNumTasks);
+        case "dueSoonest":
+            tasksArr.sort(compareDueDate);
             break;
     }
-    populateBoardArea(boardsArr);
+    populateBoardArea(tasksArr);
 }
-function compareLastModified(a, b) {
-    return compareDates(a.querySelector("#lastModified").textContent.substring(15), b.querySelector("#lastModified").textContent.substring(15));
-}
-function compareDateCreated(a, b) {
-    return compareDates(a.querySelector("#dateCreated").textContent.substring(12), b.querySelector("#dateCreated").textContent.substring(12));
-}
-function compareNumMembers(a, b) {
-    return compareNums(a.querySelector("#numMembers").textContent.substring(9), b.querySelector("#numMembers").textContent.substring(9));
-}
-function compareNumTasks(a, b) {
-    return compareNums(a.querySelector("#numTasks").textContent.substring(7), b.querySelector("#numTasks").textContent.substring(7));
+function compareDueDate(a, b) {
+    return compareDates(a.querySelector("#dueDate").textContent.substring(5), b.querySelector("#dueDate").textContent.substring(5));
 }
 
 function compareDates(date1, date2) {
