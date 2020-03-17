@@ -110,18 +110,24 @@ app.post("/insertboard", function (req, res) {
                     pool
                     .query("SELECT board_ids FROM accounts WHERE user_id=" + ownerId)
                     .then(rows => {
-                        let boardIds = rows[0].board_ids;
-                        let boardIdSet = boardIds.substr(1, boardIds.length - 2)
+                        // let boardIds = rows[0].board_ids;
+                        // let boardIdSet = boardIds.substr(1, boardIds.length - 2)
+                        if (typeof rows[0] !== 'undefined') {
+                            res.send(rows[0]);
+                        } else {
+                            res.send('"Unable to retrieve boards."');
+                        }
 
-                        pool
-                        .query("SELECT board_id,owner_id,board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
-                        .then(rows => {
-                            res.send(rows);
-                        })
-                        .catch(err => {
-                            throw err;
-                        });
+                        // pool
+                        // .query("SELECT board_id,owner_id,board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
+                        // .then(rows => {
+                        //     res.send(rows);
+                        // })
+                        // .catch(err => {
+                        //     throw err;
+                        // });
                     })
+                    .catch(err => { throw err; })
                 )
             } else {
                 let board_ids = vals[0].board_ids;
@@ -141,17 +147,22 @@ app.post("/insertboard", function (req, res) {
                     pool
                     .query("SELECT board_ids FROM accounts WHERE user_id=" + ownerId)
                     .then(rows => {
-                        let boardIds = rows[0].board_ids;
-                        let boardIdSet = boardIds.substr(1, boardIds.length - 2)
+                        // let boardIds = rows[0].board_ids;
+                        // let boardIdSet = boardIds.substr(1, boardIds.length - 2)
+                        if (typeof rows[0] !== 'undefined') {
+                            res.send(rows[0]);
+                        } else {
+                            res.send('"Unable to retrieve boards."');
+                        }
 
-                        pool
-                        .query("SELECT board_id,owner_id,board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
-                        .then(rows => {
-                            res.send(rows);
-                        })
-                        .catch(err => {
-                            throw err;
-                        });
+                        // pool
+                        // .query("SELECT board_id,owner_id,board_data FROM boards WHERE board_id IN(" + boardIdSet + ")")
+                        // .then(rows => {
+                        //     res.send(rows);
+                        // })
+                        // .catch(err => {
+                        //     throw err;
+                        // });
                     })
                 )
                 .catch(err => {throw err})

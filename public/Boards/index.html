@@ -46,6 +46,22 @@
 				<option value="numTasks">Number of Tasks</option>
 			</select>
 		</div>
+		<div id="create-window">
+			<div class="create-popup">
+				<span id="close">&times;</span>
+				<h1>Create Board</h1>
+				<form>
+					<label for="boardName">Board Name</label>
+					<input type="text" id="boardName">
+					<label for="users">Who has access?<p>(separate user names with a comma)</p></label>
+					<input type="text" id="users">
+					<input type="submit" id="submit" value="Create">
+				</form>
+				<div id="errorContainer" style="width:100%;">
+					<div id="formErrors" class="vertical-center"></div>
+				</div>
+			</div>
+		</div>
 		<div class="vertical-center" id="boardArea" onload="getBoards()">
 		</div>
 </body>
