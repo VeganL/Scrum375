@@ -1,3 +1,12 @@
+document.getElementById("hamburger").addEventListener("click", function (event) {
+	var dropdown = document.getElementById("dropdown");
+	if (dropdown.hidden) {
+		dropdown.hidden = false;
+	} else {
+		dropdown.hidden = true;
+	}
+});
+
 function validateForm() {
 	let nameValid = false;
 	let passwordValid = false;
@@ -33,14 +42,12 @@ function validateForm() {
 	}
 }
 
-function signinResponseReceivedHandler()
-{
-	if (this.responseText != '"Username or password is incorrect."')
-	{
+function signinResponseReceivedHandler() {
+	if (this.responseText != '"Username or password is incorrect."') {
 		let response = JSON.parse(this.responseText);
 		console.log(response.user_id);
-		localStorage.setItem("userId",response.user_id);
-		localStorage.setItem("boardIds",response.board_ids);
+		localStorage.setItem("userId", response.user_id);
+		localStorage.setItem("boardIds", response.board_ids);
 		window.location.href = "../Boards/";
 	} else {
 		document.getElementById("username").style.border = "2px solid red";
@@ -51,7 +58,7 @@ function signinResponseReceivedHandler()
 	}
 }
 
-document.getElementById("submit").addEventListener("click", function(event) {
+document.getElementById("submit").addEventListener("click", function (event) {
 	// Prevent default form action. DO NOT REMOVE THIS LINE
 	event.preventDefault();
 
@@ -60,14 +67,14 @@ document.getElementById("submit").addEventListener("click", function(event) {
 
 	let username = document.getElementById("username").value;
 	let password = document.getElementById("password").value;
-	
+
 	let xmlHttp = new XMLHttpRequest();
 	let requestURL = "http://scrum375.lroy.us/signin";
 	xmlHttp.addEventListener("load", signinResponseReceivedHandler);
 	xmlHttp.open("POST", requestURL);
 	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xmlHttp.send("username=" + username +"&password="+ password);
-	
+	xmlHttp.send("username=" + username + "&password=" + password);
+
 	// Prevent default form action. DO NOT REMOVE THIS LINE
 	// event.preventDefault();
 });

@@ -1,22 +1,31 @@
+document.getElementById("hamburger").addEventListener("click", function (event) {
+    var dropdown = document.getElementById("dropdown");
+    if (dropdown.hidden) {
+        dropdown.hidden = false;
+    } else {
+        dropdown.hidden = true;
+    }
+});
+
 function getBoards() {
     let boardIds = localStorage.getItem('boardIds');
     if (boardIds !== null) {
         let xmlHttp = new XMLHttpRequest();
         let requestURL = "http://scrum375.lroy.us/getboards";
-        
+
         xmlHttp.addEventListener("load", function () {
             let boardsArr = JSON.parse(this.responseText);
             let boardArea = document.getElementById('boardArea');
             let boardAreaStr = '';
 
-            for (var i = 0; i<boardsArr.length; i++) {
+            for (var i = 0; i < boardsArr.length; i++) {
                 let board = JSON.parse(boardsArr[i].board_data);
 
                 let modDate = new Date(board.date_modified);
                 let createDate = new Date(board.date_created);
 
-                let modDateStr = modDate.toString().substring(4,10) + ', ' + modDate.toString().substring(11,15);
-                let createDateStr = createDate.toString().substring(4,10) + ', ' + createDate.toString().substring(11,15);
+                let modDateStr = modDate.toString().substring(4, 10) + ', ' + modDate.toString().substring(11, 15);
+                let createDateStr = createDate.toString().substring(4, 10) + ', ' + createDate.toString().substring(11, 15);
 
                 boardAreaStr += '<div class="board-card"><h3>' + board.board_name + '</h3><p id="lastModified">Last modified: ' + modDateStr + '</p><p id="dateCreated">Created on: ' + createDateStr + '</p><p id="numMembers">Members: ' + String(board.member_amt) + '</p><p id="numTasks">Tasks: ' + String(board.task_amt) + '</p></div>';
             }
