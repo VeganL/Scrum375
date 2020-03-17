@@ -18,8 +18,20 @@
 			</div>
 		</div>
 		<div class="content">
+			<div class="vertical-center"></div>
+				<h1>Boards</h1>
+				<p>
+					<button id="createBoard">Create Board</button>
+				</p>
+				<label for="sortBy">Sort By</label>
+				<select id="sortBy" onchange="sortBoards()">
+					<option value="lastModified">Last Modified</option>
+					<option value="dateCreated">Date Created</option>
+					<option value="numMembers">Number of Members</option>
+					<option value="numTasks">Number of Tasks</option>
+				</select>
+			</div>
 			<div class="vertical-center" id="boardArea" onload="getBoards()">
-				
 			</div>
 		</div>
 	</body>
