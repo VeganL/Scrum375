@@ -1,6 +1,7 @@
 // Declaring/importing necessary files and frameworks
 var express = require("express");
 var bodyParser = require("body-parser");
+var profilePg = require("./profile_template.html");
 
 var mariadb = require("mariadb");
 var dbKey = require("../mariadb_info.json");
@@ -487,12 +488,30 @@ app.post("/deletemembers", function (req,res) {
 
 app.get("/Profile/:username", function (req,res) {
     let username = req.params.username;
+    let profilePgSegs = profilePg.split('###');
 
     pool
     .query("SELECT avatar, about FROM accounts WHERE username='" + username + "'")
     .then(rows => {
+        let resp = profilePgSegs[0] + '<h1>' + username + '</h1><p>';
+        if (rows[0].avatar !== null) {
+            resp += '<img src="' + rows[0].avatar + '">';
+        } else {
+            resp += '<img src="../../img/scrum375.svg">';
+        }
+        
+        resp += '</p><p>';
+        
+        if (rows[0].about !== null) {
+            resp += rows[0].about;
+        } else {
+            resp += 'This user has shared no information about themselves.';
+        }
+
+        resp += '</p>' + profilePgSegs[1];
+
         if (typeof rows[0] !== 'undefined') {
-            res.send(rows[0]);
+            res.send(resp);
         } else {
             res.send('"User does not exist."');
         }
