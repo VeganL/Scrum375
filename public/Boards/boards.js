@@ -295,6 +295,5 @@ function compareNums(num1, num2) {
     return num2 - num1;
 }
 
-function setProfileLink () {
-    document.getElementById('profile').href = '../Profile/' + localStorage.getItem('username') + '/';
-}
+document.getElementById('profileSide').href = '../Profile/' + localStorage.getItem('username') + '/';
+document.getElementById('profileTop').href = '../Profile/' + localStorage.getItem('username') + '/';
