@@ -1,7 +1,8 @@
 // Declaring/importing necessary files and frameworks
 var express = require("express");
 var bodyParser = require("body-parser");
-var profilePg = require("./profile_template.html");
+var fs = require("fs");
+//var profilePg = require("./profile_template.html");
 
 var mariadb = require("mariadb");
 var dbKey = require("../mariadb_info.json");
@@ -488,6 +489,10 @@ app.post("/deletemembers", function (req,res) {
 
 app.get("/Profile/:username", function (req,res) {
     let username = req.params.username;
+    let profilePg = '';
+    fs.readFile('profile_template.html', function (err, data) {
+        profilePg += String(data);
+    });
     let profilePgSegs = profilePg.split('###');
 
     pool
