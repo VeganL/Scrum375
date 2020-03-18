@@ -489,8 +489,8 @@ app.post("/deletemembers", function (req,res) {
 
 app.get("/Profile/:username", function (req,res) {
     let username = req.params.username;
-    let profilePg = '<head lang="en"><title>Scrum375 | Tasks</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" type="text/css" href="../../css/main.css"><script src="../../About/about.js" defer></script></head>';
-    profilePg += '<body><div id="bars"><div class="topbar"><h1>scrum375</h1><div id="dropdown" hidden><a href="../Register/">Register</a><a href="../Login/">Login</a><a href="../About/">About</a></div><i id="hamburger" class="icon fa fa-bars"></i></div><div class="sidebar"><div class="vertical-center" style="text-align: center;"><h1 id="header-firstline">scrum</h1><h1 id="header-secondline">375</h1><a href="../Register/">Register</a><a href="../Login/">Login</a><a href="../About/">About</a></div></div></div><div class="content"><div class="vertical-center"></div>';
+    let profilePg = '<head lang="en"><title>Scrum375 | Tasks</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>';
+    profilePg += '<body><div id="bars"><div class="topbar"><h1>scrum375</h1><div id="dropdown" hidden><a href="../../Register/">Register</a><a href="../../Login/">Login</a><a href="../../About/">About</a></div><i id="hamburger" class="icon fa fa-bars"></i></div><div class="sidebar"><div class="vertical-center" style="text-align: center;"><h1 id="header-firstline">scrum</h1><h1 id="header-secondline">375</h1><a href="../../Register/">Register</a><a href="../../Login/">Login</a><a href="../../About/">About</a></div></div></div><div class="content"><div class="vertical-center"></div>';
 
     pool
     .query("SELECT avatar, about FROM accounts WHERE username='" + username + "'")
@@ -509,7 +509,7 @@ app.get("/Profile/:username", function (req,res) {
             profilePg += 'This user has shared no information about themselves.';
         }
 
-        profilePg += `</p></div></div></body>`;
+        profilePg += `</p></div></div><script>document.getElementById("hamburger").addEventListener("click", function (event) {var dropdown = document.getElementById("dropdown");if (dropdown.hidden) {dropdown.hidden = false;} else {dropdown.hidden = true;}});if (localStorage.getItem('username') !== null) {document.getElementById('bars').innerHTML = '<div class="topbar"><h1>scrum375</h1><div id="dropdown" hidden><a href="../../Boards/">Manage</a><a href="../../Profile/' + localStorage.getItem('username') + '">Profile</a><a href="../../About/">About</a></div><i id="hamburger" class="icon fa fa-bars"></i></div><div class="sidebar"><div class="vertical-center" style="text-align: center;"><h1 id="header-firstline">scrum</h1><h1 id="header-secondline">375</h1><a href="../../Boards/">Manage</a><a href="../../Profile/' + localStorage.getItem('username') + '">Profile</a><a href="../../About/">About</a></div></div>';}</script></body>`;
 
         if (typeof rows[0] !== 'undefined') {
             res.send(profilePg);
