@@ -7,6 +7,24 @@ document.getElementById("hamburger").addEventListener("click", function (event) 
     }
 });
 
+document.getElementById("boardArea").addEventListener("click", function (event) {
+    console.log(event.currentTarget.id);
+    console.log(event.target.id);
+    if (event.target === event.currentTarget) {
+        console.log("target == currentTarget");
+    } else {
+        console.log("target != currentTarget");
+    }
+	var target = event.target;
+	if (target === event.currentTarget) {
+		return;
+	} else if (target.id != "boardcardcontent") {
+		target = target.parentElement;
+	}
+	let board_id = target.lastChild.innerHTML;
+	loadTasks(board_id);
+});
+
 document.getElementById("createBoard").addEventListener("click", function (event) {
     let boardArea = document.getElementById('boardArea');
 
@@ -98,7 +116,7 @@ document.addEventListener('readystatechange', event => {
 });
 
 
-function loadTasks()
+function loadTasks(board_id)
 {
     //save board Id depending on which board was hit
     window.location.href = "../Tasks/index.html";
@@ -111,7 +129,6 @@ function getBoards() {
         let requestURL = "http://scrum375.lroy.us/getboards";
 
         xmlHttp.addEventListener("load", function () {
-            console.log(this.responseText);
             let boardsArr = JSON.parse(this.responseText);
             let boardArea = document.getElementById('boardArea');
             let boardAreaStr = '';
@@ -125,11 +142,10 @@ function getBoards() {
                 let modDateStr = modDate.toString().substring(4, 10) + ', ' + modDate.toString().substring(11, 15);
                 let createDateStr = createDate.toString().substring(4, 10) + ', ' + createDate.toString().substring(11, 15);
 
-                boardAreaStr += '<div class="board-card" onclick="loadTasks()"><h3>' + board.board_name + '</h3><p id="lastModified">Last modified: ' + modDateStr + '</p><p id="dateCreated">Created on: ' + createDateStr + '</p><p id="numMembers">Members: ' + String(board.member_amt) + '</p><p id="numTasks">Tasks: ' + String(board.task_amt) + '</p></div>';
+                boardAreaStr += '<div class="board-card" onclick="loadTasks()"><div class="board-card-content"><h3>' + board.board_name + '</h3><p id="lastModified">Last modified: ' + modDateStr + '</p><p id="dateCreated">Created on: ' + createDateStr + '</p><p id="numMembers">Members: ' + String(board.member_amt) + '</p><p id="numTasks">Tasks: ' + String(board.task_amt) + '</p><p id="board_id" hidden>' + boardsArr[i].board_id + '</p></div></div>';
             }
 
             boardArea.innerHTML = boardAreaStr;
-            console.log(boardArea);
             sortBoards();
         });
 
@@ -295,5 +311,3 @@ function compareNums(num1, num2) {
     return num2 - num1;
 }
 
-document.getElementById('profileSide').href = '../Profile/' + localStorage.getItem('username') + '/';
-document.getElementById('profileTop').href = '../Profile/' + localStorage.getItem('username') + '/';
