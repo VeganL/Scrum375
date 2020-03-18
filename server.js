@@ -495,14 +495,13 @@ app.get("/Profile/:username", function (req,res) {
     pool
     .query("SELECT avatar, about FROM accounts WHERE username='" + username + "'")
     .then(rows => {
-        profilePg += '<h1>' + username + '</h1><p>';
         if (rows[0].avatar !== null) {
-            profilePg += '<img src="' + rows[0].avatar + '">';
+            profilePg += '<p><img src="' + rows[0].avatar + '" width="200px" height="200px"></p>';
         } else {
-            profilePg += '<img src="../../img/scrum375.svg">';
+            profilePg += '<p><img src="../../img/scrum375.svg" width="200px" height="200px"></p>';
         }
-        
-        profilePg += '</p><p>';
+
+        profilePg += '<h1>' + username + '</h1><p>';
         
         if (rows[0].about !== null) {
             profilePg += rows[0].about;
