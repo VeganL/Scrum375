@@ -489,34 +489,31 @@ app.post("/deletemembers", function (req,res) {
 
 app.get("/Profile/:username", function (req,res) {
     let username = req.params.username;
-    let profilePg = '';
-    fs.readFile('profile_template.html', function (err, data) {
-        profilePg += String(data);
-    });
-    let profilePgSegs = profilePg.split('###');
+    let profilePg = '<head lang="en"><title>Scrum375 | Tasks</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" type="text/css" href="../css/main.css"></head>';
+    profilePg += '<body><div id="bars"><div class="topbar"><h1>scrum375</h1><div id="dropdown" hidden><a href="../Register/">Register</a><a href="../Login/">Login</a><a href="../About/">About</a></div><i id="hamburger" class="icon fa fa-bars"></i></div><div class="sidebar"><div class="vertical-center" style="text-align: center;"><h1 id="header-firstline">scrum</h1><h1 id="header-secondline">375</h1><a href="../Register/">Register</a><a href="../Login/">Login</a><a href="../About/">About</a></div></div></div><div class="content"><div class="vertical-center"></div>';
 
     pool
     .query("SELECT avatar, about FROM accounts WHERE username='" + username + "'")
     .then(rows => {
-        let resp = profilePgSegs[0] + '<h1>' + username + '</h1><p>';
+        let profilePg += '<h1>' + username + '</h1><p>';
         if (rows[0].avatar !== null) {
-            resp += '<img src="' + rows[0].avatar + '">';
+            profilePg += '<img src="' + rows[0].avatar + '">';
         } else {
-            resp += '<img src="../../img/scrum375.svg">';
+            profilePg += '<img src="../../img/scrum375.svg">';
         }
         
-        resp += '</p><p>';
+        profilePg += '</p><p>';
         
         if (rows[0].about !== null) {
-            resp += rows[0].about;
+            profilePg += rows[0].about;
         } else {
-            resp += 'This user has shared no information about themselves.';
+            profilePg += 'This user has shared no information about themselves.';
         }
 
-        resp += '</p>' + profilePgSegs[1];
+        profilePg += `</p></div></div><script>if (localStorage.getItem('username') !== null) {document.getElementById('bars').innerHTML = '<div class="topbar"><h1>scrum375</h1><div id="dropdown" hidden><a href="../Boards/">Manage</a><a href="../Profile/' + localStorage.getItem('username') + '">Profile</a><a href="../About/">About</a></div><i id="hamburger" class="icon fa fa-bars"></i></div><div class="sidebar"><div class="vertical-center" style="text-align: center;"><h1 id="header-firstline">scrum</h1><h1 id="header-secondline">375</h1><a href="../Boards/">Manage</a><a href="../Profile/' + localStorage.getItem('username') + '">Profile</a><a href="../About/">About</a></div></div>';}</script></body>`;
 
         if (typeof rows[0] !== 'undefined') {
-            res.send(resp);
+            res.send(profilePg);
         } else {
             res.send('"User does not exist."');
         }
