@@ -501,7 +501,7 @@ app.get("/Profile/:username", function (req,res) {
             profilePg += '<p><img src="../../img/scrum375.svg" width="200px" height="200px"></p>';
         }
 
-        profilePg += '<h1>' + username + '</h1><p>';
+        profilePg += '<h1>' + username + ': </h1><p>';
         
         if (rows[0].about !== null) {
             profilePg += rows[0].about;
