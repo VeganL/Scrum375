@@ -1,8 +1,9 @@
 function setBars () {
     let dropDownArea = document.getElementById('dropdown');
     let sideBarArea = document.getElementsByClassName('sidebar');
+    let username = localStorage.getItem('username');
 
-    if (localStorage.getItem('username') !== null) {
+    if (username !== null) {
         let dropDownStr = '<a href="../Boards/">Manage</a><a href="../Profile/' + username + '">Profile</a><a href="../About/">About</a>';
         let sideBarStr = '<div class="vertical-center" style="text-align: center;"><h1 id="header-firstline">scrum</h1><h1 id="header-secondline">375</h1><a href="../Boards/">Manage</a><a href="../Profile/">Profile</a><a href="../About/">About</a></div>';
 
