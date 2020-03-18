@@ -1,4 +1,4 @@
-document.getElementById("bars").onload = function () {
+function setBars () {
     let dropDownArea = document.getElementById('dropdown');
     let sideBarArea = document.getElementsByClassName('sidebar');
 
