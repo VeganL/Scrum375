@@ -66,6 +66,7 @@ document.getElementById("submit").addEventListener("click", function (event) {
 		return;
 
 	let username = document.getElementById("username").value;
+	localStorage.setItem("username", username);
 	let password = document.getElementById("password").value;
 
 	let xmlHttp = new XMLHttpRequest();

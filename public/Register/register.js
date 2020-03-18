@@ -118,6 +118,7 @@ document.getElementById("submit").addEventListener("click", function (event) {
       return;
 
    let username = document.getElementById("username").value;
+   localStorage.setItem("username", username);
    let email = document.getElementById("email").value;
    let password = document.getElementById("password").value;
 
