@@ -495,7 +495,7 @@ app.get("/Profile/:username", function (req,res) {
     pool
     .query("SELECT avatar, about FROM accounts WHERE username='" + username + "'")
     .then(rows => {
-        let profilePg += '<h1>' + username + '</h1><p>';
+        profilePg += '<h1>' + username + '</h1><p>';
         if (rows[0].avatar !== null) {
             profilePg += '<img src="' + rows[0].avatar + '">';
         } else {
