@@ -126,14 +126,12 @@ function getTasks() {
                         taskAreaStr += '<div class="task-card todo"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
                         break;
                     case 1:
-                        taskAreaStr += '<div class="task-card doing"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';\
+                        taskAreaStr += '<div class="task-card doing"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
                         break;
                     case 2:
                         taskAreaStr += '<div class="task-card done"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
                         break;
                 }
-
-                taskAreaStr += '<div class="task-card"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
             }
 
             taskArea.innerHTML = taskAreaStr;
