@@ -123,13 +123,13 @@ function getTasks() {
 
                 switch (task.status) {
                     case 0:
-                        taskAreaStr += '<div class="task-card todo" style="float: left"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
+                        taskAreaStr += '<div class="task-card todo" style="float: left"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p><p><button onclick="demoteTask()">&lt;</button> <button onclick="promoteTask()">&gt;</button></p></div>';
                         break;
                     case 1:
-                        taskAreaStr += '<div class="task-card doing" style="margin-left: 43%"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
+                        taskAreaStr += '<div class="task-card doing" style="margin-left: 43%"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p>p><button onclick="demoteTask()">&lt;</button> <button onclick="promoteTask()">&gt;</button></p></div>';
                         break;
                     case 2:
-                        taskAreaStr += '<div class="task-card done" style="float: right"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
+                        taskAreaStr += '<div class="task-card done" style="float: right"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p>p><button onclick="demoteTask()">&lt;</button> <button onclick="promoteTask()">&gt;</button></p></div>';
                         break;
                 }
             }
