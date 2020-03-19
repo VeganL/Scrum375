@@ -150,6 +150,11 @@ input {
 #taskArea {
     background-color: lightgray;
     margin: 15px;
+    padding: 15px;
+}
+
+.task-card {
+    width: 100px;
 }
 
 #create-window {
