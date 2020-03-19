@@ -99,6 +99,48 @@ document.addEventListener('readystatechange', event => {
     }
 });
 
+let tasksArr;
+
+function demoteTask (index) {
+    let task = tasksArr[index].task_data;
+    let xmlHttp = new XMLHttpRequest();
+    let reqUrl = "http://scrum375.lroy.us/demotetask";
+
+    xmlHttp.addEventListener("load", function () {
+        if (document.getElementById(String(index)).classList.contains("doing")) {
+            document.getElementById(String(index)).classList.remove("doing");
+            document.getElementById(String(index)).classList.add("todo");
+        } else if (document.getElementById(String(index)).classList.contains("done")) {
+            document.getElementById(String(index)).classList.remove("done");
+            document.getElementById(String(index)).classList.add("doing");
+        }
+    });
+
+    xmlHttp.open("POST", reqUrl);
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xmlHttp.send("task_data=" + task);
+}
+
+function promoteTask (index) {
+    let task = tasksArr[index].task_data;
+    let xmlHttp = new XMLHttpRequest();
+    let reqUrl = "http://scrum375.lroy.us/demotetask";
+
+    xmlHttp.addEventListener("load", function () {
+        if (document.getElementById(String(index)).classList.contains("todo")) {
+            document.getElementById(String(index)).classList.remove("todo");
+            document.getElementById(String(index)).classList.add("doing");
+        } else if (document.getElementById(String(index)).classList.contains("doing")) {
+            document.getElementById(String(index)).classList.remove("doing");
+            document.getElementById(String(index)).classList.add("done");
+        }
+    });
+
+    xmlHttp.open("POST", reqUrl);
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xmlHttp.send("task_data=" + task);
+}
+
 function getTasks() {
 
     let boardId = localStorage.getItem('boardId');
@@ -108,7 +150,7 @@ function getTasks() {
 
         xmlHttp.addEventListener("load", function () {
             console.log(this.responseText);
-            let tasksArr = JSON.parse(this.responseText);
+            tasksArr = JSON.parse(this.responseText);
             let taskArea = document.getElementById('taskArea');
             let taskAreaStr = '';
 
@@ -123,13 +165,13 @@ function getTasks() {
 
                 switch (task.status) {
                     case 0:
-                        taskAreaStr += '<div class="task-card todo" style="float: left"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p><p><button onclick="demoteTask()">&lt;</button> <button onclick="promoteTask()">&gt;</button></p></div>';
+                        taskAreaStr += '<div class="task-card todo" id="' + i + '"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p><p><button onclick="demoteTask(' + i + ')">&lt;</button> <button onclick="promoteTask(' + i + ')">&gt;</button></p></div>';
                         break;
                     case 1:
-                        taskAreaStr += '<div class="task-card doing" style="margin-left: 43%"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p>p><button onclick="demoteTask()">&lt;</button> <button onclick="promoteTask()">&gt;</button></p></div>';
+                        taskAreaStr += '<div class="task-card doing" id="' + i + '"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p>p><button onclick="demoteTask(' + i + ')">&lt;</button> <button onclick="promoteTask(' + i + ')">&gt;</button></p></div>';
                         break;
                     case 2:
-                        taskAreaStr += '<div class="task-card done" style="float: right"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p>p><button onclick="demoteTask()">&lt;</button> <button onclick="promoteTask()">&gt;</button></p></div>';
+                        taskAreaStr += '<div class="task-card done" id="' + i + '"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p>p><button onclick="demoteTask(' + i + ')">&lt;</button> <button onclick="promoteTask(' + i + ')">&gt;</button></p></div>';
                         break;
                 }
             }

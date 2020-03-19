@@ -213,14 +213,17 @@ input {
 
 .todo {
     background-color: #7aa5ea;
+    float: left;
 }
 
 .doing {
     background-color: #eab17a;
+    margin-left: 43%;
 }
 
 .done {
     background-color: #8fea7a;
+    float: right;
 }
 
 /*Tablets in portrait*/
