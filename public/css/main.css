@@ -201,6 +201,18 @@ input {
       padding: 2%;
   }
 
+.todo {
+    background-color: #7aa5ea;
+}
+
+.doing {
+    background-color: #eab17a;
+}
+
+.done {
+    background-color: #8fea7a;
+}
+
 /*Tablets in portrait*/
 @media screen and (min-width: 700px) and (max-width: 1024px) and (orientation: portrait) {
 
