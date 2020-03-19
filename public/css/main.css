@@ -147,6 +147,11 @@ input {
     padding-right: 10px;
 }
 
+#taskArea {
+    background-color: lightgray;
+    margin: 15px;
+}
+
 #create-window {
     display: none;
     position: fixed;
