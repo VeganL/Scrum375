@@ -119,6 +119,7 @@ document.addEventListener('readystatechange', event => {
 function loadTasks(board_id)
 {
     //save board Id depending on which board was hit
+    localStorage.setItem("boardId", board_id);
     window.location.href = "../Tasks/index.html";
 }
 
@@ -142,7 +143,7 @@ function getBoards() {
                 let modDateStr = modDate.toString().substring(4, 10) + ', ' + modDate.toString().substring(11, 15);
                 let createDateStr = createDate.toString().substring(4, 10) + ', ' + createDate.toString().substring(11, 15);
 
-                boardAreaStr += '<div class="board-card" onclick="loadTasks()"><div class="board-card-content"><h3>' + board.board_name + '</h3><p id="lastModified">Last modified: ' + modDateStr + '</p><p id="dateCreated">Created on: ' + createDateStr + '</p><p id="numMembers">Members: ' + String(board.member_amt) + '</p><p id="numTasks">Tasks: ' + String(board.task_amt) + '</p><p id="board_id" hidden>' + boardsArr[i].board_id + '</p></div></div>';
+                boardAreaStr += '<div class="board-card""><div class="board-card-content"><h3>' + board.board_name + '</h3><p id="lastModified">Last modified: ' + modDateStr + '</p><p id="dateCreated">Created on: ' + createDateStr + '</p><p id="numMembers">Members: ' + String(board.member_amt) + '</p><p id="numTasks">Tasks: ' + String(board.task_amt) + '</p><p id="board_id" hidden>' + boardsArr[i].board_id + '</p></div></div>';
             }
 
             boardArea.innerHTML = boardAreaStr;

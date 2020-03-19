@@ -58,8 +58,8 @@ function registerResponseReceivedHandler() {
     console.log(this.responseText);
     if (this.responseText != '"Unable to create task."') {
         let response = JSON.parse(this.responseText);
-        localStorage.setItem("boardIds", response.board_ids);
-        window.location.href = "../Boards/";
+        localStorage.setItem("taskIds", response.board_ids);
+        window.location.href = "../Tasks/index.html";
     } else {
         let errorMsg = '<ul><li>' + this.responseText + '</li></ul>';
         let formErrors = document.getElementById("formErrors");
@@ -76,16 +76,18 @@ document.getElementById("submit").addEventListener("click", function (event) {
     if (!validateForm())
         return;
 
-    let ownerId = localStorage.getItem('userId');
-    let boardName = document.getElementById("boardName").value;
+    let boardId = localStorage.getItem('boardId');
+    let task = document.getElementById("taskName").value;
+    let ownerName = document.getElementById("ownerName").value;
+    let dueDate = document.getElementById("dueDate").value;
     //let users = document.getElementById("users").value;
 
     let xmlHttp = new XMLHttpRequest();
-    let requestURL = "http://scrum375.lroy.us/insertboard"
+    let requestURL = "http://scrum375.lroy.us/inserttask"
     xmlHttp.addEventListener("load", registerResponseReceivedHandler);
     xmlHttp.open("POST", requestURL);
     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xmlHttp.send("owner_id=" + ownerId + "&board_name=" + boardName);
+    xmlHttp.send("board_id=" + boardId + "&task=" + task + "&owner=" + owner + "&due_date=" + dueDate);
 });
 
 document.addEventListener('readystatechange', event => {
@@ -99,41 +101,38 @@ document.addEventListener('readystatechange', event => {
 
 function getTasks() {
 
-    //get boardId/taskIds from storage and retrieve task info from endpoint, then populate HTML
-    /*
-    let boardIds = localStorage.getItem('boardIds');
-    if (boardIds !== null) {
+    let boardId = localStorage.getItem('boardId');
+    if (boardId !== null) {
         let xmlHttp = new XMLHttpRequest();
-        let requestURL = "http://scrum375.lroy.us/getboards";
+        let requestURL = "http://scrum375.lroy.us/gettasks";
 
         xmlHttp.addEventListener("load", function () {
             console.log(this.responseText);
-            let boardsArr = JSON.parse(this.responseText);
-            let boardArea = document.getElementById('boardArea');
-            let boardAreaStr = '';
+            let tasksArr = JSON.parse(this.responseText);
+            let taskArea = document.getElementById('taskArea');
+            let taskAreaStr = '';
 
-            for (var i = 0; i < boardsArr.length; i++) {
-                let board = JSON.parse(boardsArr[i].board_data);
+            for (var i = 0; i < tasksArr.length; i++) {
+                let task = JSON.parse(tasksArr[i].task_data);
 
-                let modDate = new Date(board.date_modified);
-                let createDate = new Date(board.date_created);
+                let taskName = task.task;
+                let owner = task.owner;
+                let dueDate = new Date(task.due_date);
 
-                let modDateStr = modDate.toString().substring(4, 10) + ', ' + modDate.toString().substring(11, 15);
-                let createDateStr = createDate.toString().substring(4, 10) + ', ' + createDate.toString().substring(11, 15);
+                let dueDateStr = dueDate.toString().substring(4, 10) + ', ' + dueDate.toString().substring(11, 15);
 
-                boardAreaStr += '<div class="board-card"><h3>' + board.board_name + '</h3><p id="lastModified">Last modified: ' + modDateStr + '</p><p id="dateCreated">Created on: ' + createDateStr + '</p><p id="numMembers">Members: ' + String(board.member_amt) + '</p><p id="numTasks">Tasks: ' + String(board.task_amt) + '</p></div>';
+                taskAreaStr += '<div class="task-card"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
             }
 
-            boardArea.innerHTML = boardAreaStr;
-            console.log(boardArea);
-            sortBoards();
+            taskArea.innerHTML = taskAreaStr;
+            console.log(taskArea);
+            sortTasks();
         });
 
         xmlHttp.open("POST", requestURL);
         xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xmlHttp.send("board_ids=" + boardIds);
+        xmlHttp.send("board_id=" + boardId);
     }
-    */
 }
 
 function populateTaskArea(tasksArr) {
