@@ -126,7 +126,7 @@ function getTasks() {
                         taskAreaStr += '<div class="task-card todo" style="float: left"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
                         break;
                     case 1:
-                        taskAreaStr += '<div class="task-card doing" style="float: center"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
+                        taskAreaStr += '<div class="task-card doing" style="margin-left: 43%"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
                         break;
                     case 2:
                         taskAreaStr += '<div class="task-card done" style="float: right"><p id="taskName">Task: ' + taskName + '</p><p id="owner">Owner: ' + owner + '</p><p id="dueDate">Due: ' + dueDateStr + '</p></div>';
